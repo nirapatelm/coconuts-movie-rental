@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
+
 // Mock data to simulate fetching from a database
 const mockMovies = [
   { movieID: 1, title: "Movie 1" },

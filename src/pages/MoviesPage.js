@@ -7,6 +7,7 @@ import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import Paper from '@mui/material/Paper';
+import { Link } from 'react-router-dom';
 
 const MoviesPage = () => {
     const movies = [
@@ -44,6 +45,7 @@ const MoviesPage = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <Link to="/create-customer"><button>Add Customer</button></Link>
         </div>
   );
 };

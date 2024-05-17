@@ -7,6 +7,7 @@ import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import Paper from '@mui/material/Paper';
+import { Link } from 'react-router-dom';
 
 const GenresPage = () => {
   // Mock genre data
@@ -37,6 +38,7 @@ const GenresPage = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Link to="/create-genre"><button>Add Genre</button></Link>
     </div>
   );
 };
