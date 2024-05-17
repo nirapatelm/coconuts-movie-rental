@@ -5,6 +5,7 @@ import MoviesPage from './pages/MoviesPage';
 import Rentals from './pages/RentalsPage';
 import People from './pages/PeoplePage';
 import Genres from './pages/GenresPage';
+import Mapping from './pages/MappingPage';
 
 const App = () => {
   return (
@@ -27,6 +28,9 @@ const App = () => {
             <li>
               <Link to="/genres">Genres</Link>
             </li>
+            <li>
+              <Link to="/mapping">Mapping</Link>
+            </li>
           </ul>
         </nav>
 
@@ -36,6 +40,7 @@ const App = () => {
           <Route path="/rentals" element={<Rentals />} />
           <Route path="/people" element={<People />} />
           <Route path="/genres" element={<Genres />} />
+          <Route path="/mapping" element={<Mapping />} />
         </Routes>
       </div>
     </Router>
