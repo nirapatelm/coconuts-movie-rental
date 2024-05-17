@@ -41,6 +41,8 @@ const PeoplePage = () => {
         </Table>
       </TableContainer>
       <Link to="/create-people"><button>Add People</button></Link>
+      <Link to="/create-people"><button>Update People</button></Link>
+      <Link to="/"><button>Delete People</button></Link>
     </div>
   );
 };

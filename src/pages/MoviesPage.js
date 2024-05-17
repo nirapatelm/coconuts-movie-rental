@@ -45,7 +45,9 @@ const MoviesPage = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          <Link to="/create-customer"><button>Add Customer</button></Link>
+          <Link to="/create-movie"><button>Add Movie</button></Link>
+          <Link to="/create-movie"><button>Update Movie</button></Link>
+          <Link to="/"><button>Delete Movie</button></Link>
         </div>
   );
 };

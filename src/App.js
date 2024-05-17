@@ -12,6 +12,12 @@ import CreateRentalForm from './pages/CreateRentalForm';
 import CreatePeopleForm from './pages/CreatePeopleForm';
 import CreateGenreForm from './pages/CreateGenreForm';
 import CreateMappingForm from './pages/CreateMappingForm'; 
+import UpdateCustomerForm from './pages/UpdateCustomerForm';
+import UpdateMovieForm from './pages/UpdateMovieForm';
+import UpdateRentalForm from './pages/UpdateRentalForm';
+import UpdatePeopleForm from './pages/UpdatePeopleForm';
+import UpdateGenreForm from './pages/UpdateGenreForm';
+import UpdateMappingForm from './pages/UpdateMappingForm'; 
 
 const App = () => {
   return (
@@ -53,6 +59,13 @@ const App = () => {
           <Route path="/create-people" element={<CreatePeopleForm />} />
           <Route path="/create-genre" element={<CreateGenreForm />} />
           <Route path="/create-mapping" element={<CreateMappingForm />} />
+          <Route path="/update-customer" element={<UpdateCustomerForm />} />
+          <Route path="/update-movie" element={<UpdateMovieForm />} />
+          <Route path="/update-rental" element={<UpdateRentalForm />} />
+          <Route path="/update-people" element={<UpdatePeopleForm />} />
+          <Route path="/update-genre" element={<UpdateGenreForm />} />
+          <Route path="/update-mapping" element={<UpdateMappingForm />} />
+          
         </Routes>
       </div>
     </Router>

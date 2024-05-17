@@ -40,6 +40,8 @@ const MappingsPage = () => {
         </Table>
       </TableContainer>
       <Link to="/create-mapping"><button>Add Mapping</button></Link>
+      <Link to="/create-mapping"><button>Update Mapping</button></Link>
+      <Link to="/"><button>Delete Mapping</button></Link>
     </div>
   );
 };

@@ -39,6 +39,8 @@ const GenresPage = () => {
         </Table>
       </TableContainer>
       <Link to="/create-genre"><button>Add Genre</button></Link>
+      <Link to="/create-genre"><button>Update Genre</button></Link>
+      <Link to="/"><button>Delete Genre</button></Link>
     </div>
   );
 };

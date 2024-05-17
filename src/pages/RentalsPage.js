@@ -47,6 +47,8 @@ const RentalsPage = () => {
         </Table>
       </TableContainer>
       <Link to="/create-rental"><button>Add Rentals</button></Link>
+      <Link to="/create-rental"><button>Update Rental</button></Link>
+      <Link to="/"><button>Delete Rental</button></Link>
     </div>
   );
 };
