@@ -18,9 +18,14 @@ import UpdateRentalForm from './pages/UpdateRentalForm';
 import UpdatePeopleForm from './pages/UpdatePeopleForm';
 import UpdateGenreForm from './pages/UpdateGenreForm';
 import UpdateMappingForm from './pages/UpdateMappingForm'; 
+import Movies from './componentsAxios/Movies';
+
+
+
 
 const App = () => {
   return (
+
     <Router>
       <div>
         <nav>
@@ -45,7 +50,7 @@ const App = () => {
             </li>
           </ul>
         </nav>
-
+        <Movies /> 
         <Routes>
           <Route path="/customers" element={<CustomersPage />} />
           <Route path="/movies" element={<MoviesPage />} />
@@ -65,8 +70,8 @@ const App = () => {
           <Route path="/update-people" element={<UpdatePeopleForm />} />
           <Route path="/update-genre" element={<UpdateGenreForm />} />
           <Route path="/update-mapping" element={<UpdateMappingForm />} />
-          
         </Routes>
+
       </div>
     </Router>
   );

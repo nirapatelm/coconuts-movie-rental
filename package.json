@@ -1,7 +1,7 @@
 {
-  "name": "project-step-3",
+  "name": "coconuts-movie-rental",
   "version": "0.1.0",
-  "homepage": "https://nirapatelm.github.io/project-step-3/",
+  "homepage": "https://nirapatelm.github.io/coconuts-movie-rental/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -10,6 +10,11 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.7.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.9.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.51.4",
@@ -45,5 +50,10 @@
   },
   "devDependencies": {
     "gh-pages": "^6.1.1"
-  }
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

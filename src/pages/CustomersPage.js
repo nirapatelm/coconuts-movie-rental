@@ -35,7 +35,8 @@ const CustomersPage = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredCustomers = customers.filter(customer => {
+  // Remove the declaration and assignment of 'filteredCustomers'
+  customers.filter(customer => {
     const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
     return (
       fullName.includes(searchTerm.toLowerCase()) ||
