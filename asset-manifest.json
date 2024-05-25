@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/project-step-3/static/css/main.e6c13ad2.css",
-    "main.js": "/project-step-3/static/js/main.036f64bf.js",
-    "index.html": "/project-step-3/index.html",
-    "main.e6c13ad2.css.map": "/project-step-3/static/css/main.e6c13ad2.css.map",
-    "main.036f64bf.js.map": "/project-step-3/static/js/main.036f64bf.js.map"
+    "main.css": "/coconuts-movie-rental/static/css/main.e6c13ad2.css",
+    "main.js": "/coconuts-movie-rental/static/js/main.82404b17.js",
+    "index.html": "/coconuts-movie-rental/index.html",
+    "main.e6c13ad2.css.map": "/coconuts-movie-rental/static/css/main.e6c13ad2.css.map",
+    "main.82404b17.js.map": "/coconuts-movie-rental/static/js/main.82404b17.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.036f64bf.js"
+    "static/js/main.82404b17.js"
   ]
 }
