@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/coconuts-movie-rental/static/css/main.e6c13ad2.css",
-    "main.js": "/coconuts-movie-rental/static/js/main.4f02415e.js",
+    "main.js": "/coconuts-movie-rental/static/js/main.fa20ed0a.js",
     "index.html": "/coconuts-movie-rental/index.html",
     "main.e6c13ad2.css.map": "/coconuts-movie-rental/static/css/main.e6c13ad2.css.map",
-    "main.4f02415e.js.map": "/coconuts-movie-rental/static/js/main.4f02415e.js.map"
+    "main.fa20ed0a.js.map": "/coconuts-movie-rental/static/js/main.fa20ed0a.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.4f02415e.js"
+    "static/js/main.fa20ed0a.js"
   ]
 }
