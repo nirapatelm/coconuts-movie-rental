@@ -1,21 +1,23 @@
 const express = require('express');
-const mysql = require('mysql2');
+const mysql = require('mysql');
 const cors = require('cors');
 
 const app = express();
-const port = 5000;
+
+// server port
+const port = 80;
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json())
 
-// Database connection
 const db = mysql.createConnection({
-  host: '127.0.0.1',
-  user: 'root',
-  password: 'nishu1830!',
-  database: 'coconuts_movie_rental',
-  port: 3306
+    host: 'coconuts-movie-rentals.cjcig6ock5ue.us-east-1.rds.amazonaws.com',
+    user: 'root',
+    password: 'coconut24',
+    database: 'coconuts-movie-rental',
+    // db port
+    port: 3306
 });
 
 db.connect(err => {
@@ -28,7 +30,7 @@ db.connect(err => {
 
 // Fetch all movies
 app.get('/api/movies', (req, res) => {
-  const query = 'SELECT * FROM movies';
+  const query = 'SELECT * FROM Movies';
   db.query(query, (err, results) => {
     if (err) {
       console.error('Error fetching data: ' + err.stack);
@@ -42,7 +44,7 @@ app.get('/api/movies', (req, res) => {
 // Add a new movie
 app.post('/api/movies', (req, res) => {
   const { title, releaseYear, rating, availability } = req.body;
-  const query = 'INSERT INTO movies (movieID, title, releaseYear, rating, availability) VALUES (UUID(), ?, ?, ?, ?)';
+  const query = 'INSERT INTO Movies (movieID, title, releaseYear, rating, availability) VALUES (UUID(), ?, ?, ?, ?)';
   db.query(query, [title, releaseYear, rating, availability], (err, result) => {
     if (err) {
       console.error('Error adding movie: ' + err.stack);
@@ -57,7 +59,7 @@ app.post('/api/movies', (req, res) => {
 app.put('/api/movies/:id', (req, res) => {
   const movieID = req.params.id;
   const { title, releaseYear, rating, availability } = req.body;
-  const query = 'UPDATE movies SET title = ?, releaseYear = ?, rating = ?, availability = ? WHERE movieID = ?';
+  const query = 'UPDATE Movies SET title = ?, releaseYear = ?, rating = ?, availability = ? WHERE movieID = ?';
   db.query(query, [title, releaseYear, rating, availability, movieID], (err, result) => {
     if (err) {
       console.error('Error updating movie: ' + err.stack);
@@ -75,7 +77,7 @@ app.put('/api/movies/:id', (req, res) => {
 // Delete a movie
 app.delete('/api/movies/:id', (req, res) => {
   const movieID = req.params.id;
-  const query = 'DELETE FROM movies WHERE movieID = ?';
+  const query = 'DELETE FROM Movies WHERE movieID = ?';
   db.query(query, [movieID], (err, result) => {
     if (err) {
       console.error('Error deleting movie: ' + err.stack);
