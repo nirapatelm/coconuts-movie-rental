@@ -1,7 +1,7 @@
 {
   "name": "coconuts-movie-rental",
   "version": "0.1.0",
-  "homepage": "https://nirapatelm.github.io/coconuts-movie-rental/",
+  "homepage": "/build",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -30,6 +30,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
+  "proxy": "http://localhost:5273",
   "eslintConfig": {
     "extends": [
       "react-app",

@@ -13,7 +13,7 @@ const Movies = () => {
   }, []);
 
   const fetchMovies = () => {
-    axios.get('http://ec2-3-94-191-18.compute-1.amazonaws.com/api/movies')
+    axios.get('http://classwork.engr.oregonstate.edu:5273/api/movies')
       .then(response => {
         setMovies(response.data);
       })
@@ -39,7 +39,7 @@ const Movies = () => {
   };
 
   const addMovie = () => {
-    axios.post('http://ec2-3-94-191-18.compute-1.amazonaws.com/api/movies', newMovie)
+    axios.post('http://classwork.engr.oregonstate.edu:5273/api/movies', newMovie)
       .then(() => {
         fetchMovies();
         setNewMovie({ title: '', releaseYear: '', rating: '', availability: false });
@@ -53,7 +53,7 @@ const Movies = () => {
   const updateMovie = (movieID) => {
     console.log(`Updating movie with ID: ${movieID}`); // Debugging line
     console.log(`Movie data: `, editMovie); // Debugging line
-    axios.put(`http://ec2-3-94-191-18.compute-1.amazonaws.com/api/movies/${movieID}`, editMovie)
+    axios.put(`http://classwork.engr.oregonstate.edu:5273/api/movies/${movieID}`, editMovie)
       .then(() => {
         fetchMovies(); // Refresh movies after update
         setEditMovie(null);
@@ -65,7 +65,7 @@ const Movies = () => {
   };
 
   const deleteMovie = (movieID) => {
-    axios.delete(`http://ec2-3-94-191-18.compute-1.amazonaws.com/api/movies/${movieID}`)
+    axios.delete(`http://classwork.engr.oregonstate.edu:5273/api/movies/${movieID}`)
       .then(() => {
         fetchMovies();
       })

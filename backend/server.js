@@ -1,15 +1,17 @@
 const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
+const path = require('path'); 
 
 const app = express();
-
-// server port
-const port = 80
+const PORT = process.env.PORT || 5273;
 
 // Middleware
 app.use(cors());
 app.use(express.json())
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'build')));
 
 const db = mysql.createConnection({
     host: 'coconuts-movie-rentals.cjcig6ock5ue.us-east-1.rds.amazonaws.com',
@@ -26,6 +28,10 @@ db.connect(err => {
     return;
   }
   console.log('Connected to database.');
+});
+
+app.get('/', (req, res) => {
+  res.sendFile('/index.html');
 });
 
 // Fetch all movies
@@ -92,7 +98,8 @@ app.delete('/api/movies/:id', (req, res) => {
   });
 });
 
+
 // Start the server
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
