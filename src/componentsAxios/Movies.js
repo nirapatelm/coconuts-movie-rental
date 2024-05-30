@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
-  const [newMovie, setNewMovie] = useState({ title: '', releaseYear: '', rating: '', availability: false });
+  const [newMovie, setNewMovie] = useState({
+    title: "",
+    releaseYear: "",
+    rating: "",
+    availability: false,
+  });
   const [editMovie, setEditMovie] = useState(null);
   const [isAddFormVisible, setAddFormVisible] = useState(false);
   const [isEditFormVisible, setEditFormVisible] = useState(false);
@@ -13,12 +18,13 @@ const Movies = () => {
   }, []);
 
   const fetchMovies = () => {
-    axios.get('http://classwork.engr.oregonstate.edu:5273/api/movies')
-      .then(response => {
+    axios
+      .get("http://classwork.engr.oregonstate.edu:5273/api/movies")
+      .then((response) => {
         setMovies(response.data);
       })
-      .catch(error => {
-        console.error('Error fetching data:', error);
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       });
   };
 
@@ -26,51 +32,64 @@ const Movies = () => {
     const { name, value, type, checked } = e.target;
     setNewMovie({
       ...newMovie,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
   const handleEditChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setEditMovie(prevEditMovie => ({
+    setEditMovie((prevEditMovie) => ({
       ...prevEditMovie,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const addMovie = () => {
-    axios.post('http://classwork.engr.oregonstate.edu:5273/api/movies', newMovie)
+    axios
+      .post("http://classwork.engr.oregonstate.edu:5273/api/movies", newMovie)
       .then(() => {
         fetchMovies();
-        setNewMovie({ title: '', releaseYear: '', rating: '', availability: false });
+        setNewMovie({
+          title: "",
+          releaseYear: "",
+          rating: "",
+          availability: false,
+        });
         setAddFormVisible(false);
       })
-      .catch(error => {
-        console.error('Error adding movie:', error);
+      .catch((error) => {
+        console.error("Error adding movie:", error);
       });
   };
 
   const updateMovie = (movieID) => {
     console.log(`Updating movie with ID: ${movieID}`); // Debugging line
     console.log(`Movie data: `, editMovie); // Debugging line
-    axios.put(`http://classwork.engr.oregonstate.edu:5273/api/movies/${movieID}`, editMovie)
+    axios
+      .put(
+        `http://classwork.engr.oregonstate.edu:5273/api/movies/${movieID}`,
+        editMovie
+      )
       .then(() => {
         fetchMovies(); // Refresh movies after update
         setEditMovie(null);
         setEditFormVisible(false);
       })
-      .catch(error => {
-        console.error('Error updating movie:', error);
+      .catch((error) => {
+        console.error("Error updating movie:", error);
       });
   };
 
   const deleteMovie = (movieID) => {
-    axios.delete(`http://classwork.engr.oregonstate.edu:5273/api/movies/${movieID}`)
+    axios
+      .delete(
+        `http://classwork.engr.oregonstate.edu:5273/api/movies/${movieID}`
+      )
       .then(() => {
         fetchMovies();
       })
-      .catch(error => {
-        console.error('Error deleting movie:', error);
+      .catch((error) => {
+        console.error("Error deleting movie:", error);
       });
   };
 
@@ -78,7 +97,7 @@ const Movies = () => {
     <div>
       <h1>Movies</h1>
       <button onClick={() => setAddFormVisible(!isAddFormVisible)}>
-        {isAddFormVisible ? 'Cancel' : 'Add New Movie'}
+        {isAddFormVisible ? "Cancel" : "Add New Movie"}
       </button>
       {isAddFormVisible && (
         <div>
@@ -134,10 +153,19 @@ const Movies = () => {
               <td>{movie.title}</td>
               <td>{movie.releaseYear}</td>
               <td>{movie.rating}</td>
-              <td>{movie.availability ? 'Available' : 'Not Available'}</td>
+              <td>{movie.availability ? "Available" : "Not Available"}</td>
               <td>
-                <button onClick={() => { setEditMovie(movie); setEditFormVisible(true); }}>Edit</button>
-                <button onClick={() => deleteMovie(movie.movieID)}>Delete</button>
+                <button
+                  onClick={() => {
+                    setEditMovie(movie);
+                    setEditFormVisible(true);
+                  }}
+                >
+                  Edit
+                </button>
+                <button onClick={() => deleteMovie(movie.movieID)}>
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
@@ -176,8 +204,17 @@ const Movies = () => {
               onChange={handleEditChange}
             />
           </label>
-          <button onClick={() => updateMovie(editMovie.movieID)}>Update Movie</button>
-          <button onClick={() => { setEditMovie(null); setEditFormVisible(false); }}>Cancel</button>
+          <button onClick={() => updateMovie(editMovie.movieID)}>
+            Update Movie
+          </button>
+          <button
+            onClick={() => {
+              setEditMovie(null);
+              setEditFormVisible(false);
+            }}
+          >
+            Cancel
+          </button>
         </div>
       )}
     </div>

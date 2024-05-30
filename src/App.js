@@ -1,31 +1,27 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import CustomersPage from './pages/CustomersPage';
-import MoviesPage from './pages/MoviesPage';
-import Rentals from './pages/RentalsPage';
-import People from './pages/PeoplePage';
-import Genres from './pages/GenresPage';
-import Mapping from './pages/MappingPage';
-import CreateCustomerForm from './pages/CreateCustomerForm';
-import CreateMovieForm from './pages/CreateMovieForm';
-import CreateRentalForm from './pages/CreateRentalForm';
-import CreatePeopleForm from './pages/CreatePeopleForm';
-import CreateGenreForm from './pages/CreateGenreForm';
-import CreateMappingForm from './pages/CreateMappingForm'; 
-import UpdateCustomerForm from './pages/UpdateCustomerForm';
-import UpdateMovieForm from './pages/UpdateMovieForm';
-import UpdateRentalForm from './pages/UpdateRentalForm';
-import UpdatePeopleForm from './pages/UpdatePeopleForm';
-import UpdateGenreForm from './pages/UpdateGenreForm';
-import UpdateMappingForm from './pages/UpdateMappingForm'; 
-import Movies from './componentsAxios/Movies';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import CustomersPage from "./pages/CustomersPage";
+import People from "./pages/PeoplePage";
 
-
-
+import Mapping from "./pages/MappingPage";
+import CreateCustomerForm from "./pages/CreateCustomerForm";
+import CreateMovieForm from "./pages/CreateMovieForm";
+import CreateRentalForm from "./pages/CreateRentalForm";
+import CreatePeopleForm from "./pages/CreatePeopleForm";
+import CreateGenreForm from "./pages/CreateGenreForm";
+import CreateMappingForm from "./pages/CreateMappingForm";
+import UpdateCustomerForm from "./pages/UpdateCustomerForm";
+import UpdateMovieForm from "./pages/UpdateMovieForm";
+import UpdateRentalForm from "./pages/UpdateRentalForm";
+import UpdatePeopleForm from "./pages/UpdatePeopleForm";
+import UpdateGenreForm from "./pages/UpdateGenreForm";
+import UpdateMappingForm from "./pages/UpdateMappingForm";
+import Movies from "./componentsAxios/Movies";
+import Rentals from "./componentsAxios/Rentals";
+import Genres from "./componentsAxios/Genre";
 
 const App = () => {
   return (
-
     <Router>
       <div>
         <nav>
@@ -50,10 +46,10 @@ const App = () => {
             </li>
           </ul>
         </nav>
-        <Movies /> 
+        <Movies />
         <Routes>
           <Route path="/customers" element={<CustomersPage />} />
-          <Route path="/movies" element={<MoviesPage />} />
+          <Route path="/movies" element={<Movies />} />
           <Route path="/rentals" element={<Rentals />} />
           <Route path="/people" element={<People />} />
           <Route path="/genres" element={<Genres />} />
@@ -71,7 +67,6 @@ const App = () => {
           <Route path="/update-genre" element={<UpdateGenreForm />} />
           <Route path="/update-mapping" element={<UpdateMappingForm />} />
         </Routes>
-
       </div>
     </Router>
   );
