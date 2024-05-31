@@ -1,8 +1,5 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import CustomersPage from "./pages/CustomersPage";
-import People from "./pages/PeoplePage";
-
 import Mapping from "./pages/MappingPage";
 import CreateCustomerForm from "./pages/CreateCustomerForm";
 import CreateMovieForm from "./pages/CreateMovieForm";
@@ -19,6 +16,8 @@ import UpdateMappingForm from "./pages/UpdateMappingForm";
 import Movies from "./componentsAxios/Movies";
 import Rentals from "./componentsAxios/Rentals";
 import Genres from "./componentsAxios/Genre";
+import CustomersPage from "./componentsAxios/Customers";
+import People from "./componentsAxios/People";
 
 const App = () => {
   return (

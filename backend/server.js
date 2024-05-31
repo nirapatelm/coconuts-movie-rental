@@ -118,10 +118,8 @@ app.post("/api/rentals", (req, res) => {
   const { customerID, movieID, rentalDate, returnDate, totalAmount } = req.body;
   const query =
     "INSERT INTO Rentals (customerID, movieID, rentalDate, returnDate, totalAmount) VALUES (?, ?, ?, ?, ?)";
-  db.query(
-    query,
-    [customerID, movieID, rentalDate, returnDate, totalAmount],
-    (err, result) => {
+  db.query( query, [customerID, movieID, rentalDate, returnDate, totalAmount],
+    (err) => {
       if (err) {
         console.error("Error adding rental: " + err.stack);
         res.status(500).send("Error adding rental");
@@ -174,6 +172,76 @@ app.delete("/api/rentals/:id", (req, res) => {
   });
 });
 
+// Fetch all customers
+app.get("/api/customers", (req, res) => {
+  const query = "SELECT * FROM Customers";
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching data: " + err.stack);
+      res.status(500).send("Error fetching data");
+      return;
+    }
+    res.json(results);
+  });
+});
+
+// Add a new customer
+app.post("/api/customers", (req, res) => {
+  const { firstName, lastName, email, phone, address } = req.body;
+  const query =
+    "INSERT INTO Customers (firstName, lastName, email, phone, address) VALUES (?, ?, ?, ?, ?)";
+  db.query(query, [firstName, lastName, email, phone, address], (err, result) => {
+    if (err) {
+      console.error("Error adding customer: " + err.stack);
+      res.status(500).send("Error adding customer");
+      return;
+    }
+    res.send("Customer added successfully");
+  });
+});
+
+// Update a customer
+app.put("/api/customers/:id", (req, res) => {
+  const customerID = req.params.id;
+  const { firstName, lastName, email, phone, address } = req.body;
+  const query =
+    "UPDATE Customers SET firstName = ?, lastName = ?, email = ?, phone = ?, address = ? WHERE customerID = ?";
+  db.query(
+    query,
+    [firstName, lastName, email, phone, address, customerID],
+    (err, result) => {
+      if (err) {
+        console.error("Error updating customer: " + err.stack);
+        res.status(500).send("Error updating customer");
+        return;
+      }
+      if (result.affectedRows === 0) {
+        res.status(404).send("Customer not found");
+        return;
+      }
+      res.send("Customer updated successfully");
+    }
+  );
+});
+
+// Delete a customer
+app.delete("/api/customers/:id", (req, res) => {
+  const customerID = req.params.id;
+  const query = "DELETE FROM Customers WHERE customerID = ?";
+  db.query(query, [customerID], (err, result) => {
+    if (err) {
+      console.error("Error deleting customer: " + err.stack);
+      res.status(500).send("Error deleting customer");
+      return;
+    }
+    if (result.affectedRows === 0) {
+      res.status(404).send("Customer not found");
+      return;
+    }
+    res.send("Customer deleted successfully");
+  });
+});
+
 // Fetch all genres
 app.get("/api/genre", (req, res) => {
   const query = "SELECT * FROM Genre";
@@ -190,7 +258,7 @@ app.get("/api/genre", (req, res) => {
 // Add a new genre
 app.post("/api/genre", (req, res) => {
   const { genreName } = req.body;
-  const query = "INSERT INTO Genre (genreID, genreName) VALUES (UUID(), ?)";
+  const query = "INSERT INTO Genre (genreName) VALUES (?)";
   db.query(query, [genreName], (err, result) => {
     if (err) {
       console.error("Error adding genre: " + err.stack);
@@ -235,6 +303,72 @@ app.delete("/api/genre/:id", (req, res) => {
       return;
     }
     res.send("Genre deleted successfully");
+  });
+});
+
+// Fetch all people
+app.get("/api/people", (req, res) => {
+  const query = "SELECT * FROM People";
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching people: " + err.stack);
+      res.status(500).send("Error fetching people");
+      return;
+    }
+    res.json(results);
+  });
+});
+
+// Add a new person
+app.post("/api/people", (req, res) => {
+  const { firstName, lastName } = req.body;
+  const query =
+    "INSERT INTO People (firstName, lastName) VALUES (?, ?)";
+  db.query(query, [firstName, lastName], (err, result) => {
+    if (err) {
+      console.error("Error adding person: " + err.stack);
+      res.status(500).send("Error adding person");
+      return;
+    }
+    res.send("Person added successfully");
+  });
+});
+
+// Update a person
+app.put("/api/people/:id", (req, res) => {
+  const nameID = req.params.id;
+  const { firstName, lastName } = req.body;
+  const query =
+    "UPDATE People SET firstName = ?, lastName = ? WHERE nameID = ?";
+  db.query(query, [firstName, lastName, nameID], (err, result) => {
+    if (err) {
+      console.error("Error updating person: " + err.stack);
+      res.status(500).send("Error updating person");
+      return;
+    }
+    if (result.affectedRows === 0) {
+      res.status(404).send("Person not found");
+      return;
+    }
+    res.send("Person updated successfully");
+  });
+});
+
+// Delete a person
+app.delete("/api/people/:id", (req, res) => {
+  const nameID = req.params.id;
+  const query = "DELETE FROM People WHERE nameID = ?";
+  db.query(query, [nameID], (err, result) => {
+    if (err) {
+      console.error("Error deleting person: " + err.stack);
+      res.status(500).send("Error deleting person");
+      return;
+    }
+    if (result.affectedRows === 0) {
+      res.status(404).send("Person not found");
+      return;
+    }
+    res.send("Person deleted successfully");
   });
 });
 

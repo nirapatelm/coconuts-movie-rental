@@ -3,8 +3,8 @@ import axios from "axios";
 
 const People = () => {
   const [people, setPeople] = useState([]);
-  const [newPeople, setNewPeople] = useState({ firstName: "", lastName: "" });
-  const [editPeople, setEditPeople] = useState(null);
+  const [newPerson, setNewPerson] = useState({ firstName: "", lastName: "" });
+  const [editPerson, setEditPerson] = useState(null);
   const [isAddFormVisible, setAddFormVisible] = useState(false);
   const [isEditFormVisible, setEditFormVisible] = useState(false);
 
@@ -24,45 +24,43 @@ const People = () => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setNewPeople({
-      ...newPeople,
-      [name]: type === "checkbox" ? checked : value,
+    const { name, value } = e.target;
+    setNewPerson({
+      ...newPerson,
+      [name]: value,
     });
   };
 
   const handleEditChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setEditPeople((prevEditPeople) => ({
-      ...prevEditPeople,
-      [name]: type === "checkbox" ? checked : value,
+    const { name, value } = e.target;
+    setEditPerson((prevEditPerson) => ({
+      ...prevEditPerson,
+      [name]: value,
     }));
   };
 
-  const addPeople = () => {
+  const addPerson = () => {
     axios
-      .post("http://classwork.engr.oregonstate.edu:5273/api/people", newPeople)
+      .post("http://classwork.engr.oregonstate.edu:5273/api/people", newPerson)
       .then(() => {
         fetchPeople();
-        setNewPeople({ firstName: "", lastName: "" });
+        setNewPerson({ firstName: "", lastName: "" });
         setAddFormVisible(false);
       })
       .catch((error) => {
-        console.error("Error adding people:", error);
+        console.error("Error adding person:", error);
       });
   };
 
-  const updatePeople = (nameID) => {
-    console.log(`Updating person with ID: ${nameID}`); // Debugging line
-    console.log(`People data: `, editPeople); // Debugging line
+  const updatePerson = (nameID) => {
     axios
       .put(
         `http://classwork.engr.oregonstate.edu:5273/api/people/${nameID}`,
-        editPeople
+        editPerson
       )
       .then(() => {
         fetchPeople(); // Refresh people after update
-        setEditPeople(null);
+        setEditPerson(null);
         setEditFormVisible(false);
       })
       .catch((error) => {
@@ -70,7 +68,7 @@ const People = () => {
       });
   };
 
-  const deletePeople = (nameID) => {
+  const deletePerson = (nameID) => {
     axios
       .delete(`http://classwork.engr.oregonstate.edu:5273/api/people/${nameID}`)
       .then(() => {
@@ -85,26 +83,26 @@ const People = () => {
     <div>
       <h1>People</h1>
       <button onClick={() => setAddFormVisible(!isAddFormVisible)}>
-        {isAddFormVisible ? "Cancel" : "Add new People"}
+        {isAddFormVisible ? "Cancel" : "Add new Person"}
       </button>
       {isAddFormVisible && (
         <div>
-          <h2>Add New People</h2>
+          <h2>Add New Person</h2>
           <input
             type="text"
-            name="name"
+            name="firstName"
             placeholder="First name"
-            value={newPeople.firstName}
+            value={newPerson.firstName}
             onChange={handleInputChange}
           />
           <input
             type="text"
-            name="name"
+            name="lastName"
             placeholder="Last name"
-            value={newPeople.lastName}
+            value={newPerson.lastName}
             onChange={handleInputChange}
           />
-          <button onClick={addPeople}>Add People</button>
+          <button onClick={addPerson}>Add Person</button>
         </div>
       )}
       <table>
@@ -113,24 +111,25 @@ const People = () => {
             <th>Name ID</th>
             <th>First Name</th>
             <th>Last Name</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {people.map((people) => (
-            <tr key={people.nameID}>
-              <td>{people.nameID}</td>
-              <td>{people.firstName}</td>
-              <td>{people.lastName}</td>
+          {people.map((person) => (
+            <tr key={person.nameID}>
+              <td>{person.nameID}</td>
+              <td>{person.firstName}</td>
+              <td>{person.lastName}</td>
               <td>
                 <button
                   onClick={() => {
-                    setEditPeople(people);
+                    setEditPerson(person);
                     setEditFormVisible(true);
                   }}
                 >
                   Edit
                 </button>
-                <button onClick={() => deletePeople(people.nameID)}>
+                <button onClick={() => deletePerson(person.nameID)}>
                   Delete
                 </button>
               </td>
@@ -138,29 +137,29 @@ const People = () => {
           ))}
         </tbody>
       </table>
-      {isEditFormVisible && editPeople && (
+      {isEditFormVisible && editPerson && (
         <div>
-          <h2>Edit People</h2>
+          <h2>Edit Person</h2>
           <input
             type="text"
-            name="name"
+            name="firstName"
             placeholder="First name"
-            value={newPeople.firstName}
+            value={editPerson.firstName}
             onChange={handleEditChange}
           />
           <input
             type="text"
-            name="name"
+            name="lastName"
             placeholder="Last name"
-            value={newPeople.lastName}
+            value={editPerson.lastName}
             onChange={handleEditChange}
           />
-          <button onClick={() => updatePeople(editPeople.nameID)}>
-            Update People
+          <button onClick={() => updatePerson(editPerson.nameID)}>
+            Update Person
           </button>
           <button
             onClick={() => {
-              setEditPeople(null);
+              setEditPerson(null);
               setEditFormVisible(false);
             }}
           >

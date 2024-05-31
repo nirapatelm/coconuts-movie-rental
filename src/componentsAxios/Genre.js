@@ -24,18 +24,18 @@ const Genre = () => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setNewGenre({
       ...newGenre,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     });
   };
 
   const handleEditChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setEditGenre((prevEditGenre) => ({
       ...prevEditGenre,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     }));
   };
 
@@ -53,8 +53,6 @@ const Genre = () => {
   };
 
   const updateGenre = (genreID) => {
-    console.log(`Updating genre with ID: ${genreID}`); // Debugging line
-    console.log(`Genre data: `, editGenre); // Debugging line
     axios
       .put(
         `http://classwork.engr.oregonstate.edu:5273/api/genre/${genreID}`,
@@ -92,10 +90,10 @@ const Genre = () => {
           <h2>Add New Genre</h2>
           <input
             type="text"
-            name="name"
+            name="genreName"
             placeholder="Genre name"
             value={newGenre.genreName}
-            onChange={handleEditChange}
+            onChange={handleInputChange}
           />
           <button onClick={addGenre}>Add Genre</button>
         </div>
@@ -134,10 +132,10 @@ const Genre = () => {
           <h2>Edit Genre</h2>
           <input
             type="text"
-            name="name"
+            name="genreName"
             placeholder="Genre name"
-            value={newGenre.genreName}
-            onChange={handleInputChange}
+            value={editGenre.genreName}
+            onChange={handleEditChange}
           />
           <button onClick={() => updateGenre(editGenre.genreID)}>
             Update Genre
