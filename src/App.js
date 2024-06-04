@@ -1,26 +1,16 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Mapping from "./pages/MappingPage";
-import CreateCustomerForm from "./pages/CreateCustomerForm";
-import CreateMovieForm from "./pages/CreateMovieForm";
-import CreateRentalForm from "./pages/CreateRentalForm";
-import CreatePeopleForm from "./pages/CreatePeopleForm";
-import CreateGenreForm from "./pages/CreateGenreForm";
-import CreateMappingForm from "./pages/CreateMappingForm";
-import UpdateCustomerForm from "./pages/UpdateCustomerForm";
-import UpdateMovieForm from "./pages/UpdateMovieForm";
-import UpdateRentalForm from "./pages/UpdateRentalForm";
-import UpdatePeopleForm from "./pages/UpdatePeopleForm";
-import UpdateGenreForm from "./pages/UpdateGenreForm";
-import UpdateMappingForm from "./pages/UpdateMappingForm";
-import Movies from "./componentsAxios/Movies";
-import Rentals from "./componentsAxios/Rentals";
-import Genres from "./componentsAxios/Genre";
-import CustomersPage from "./componentsAxios/Customers";
-import People from "./componentsAxios/People";
+import Movies from "./components/Movies";
+import Rentals from "./components/Rentals";
+import Genres from "./components/Genre";
+import CustomersPage from "./components/Customers";
+import People from "./components/People";
+
 
 const App = () => {
   return (
+
     <Router>
       <div>
         <nav>
@@ -53,18 +43,6 @@ const App = () => {
           <Route path="/people" element={<People />} />
           <Route path="/genres" element={<Genres />} />
           <Route path="/mapping" element={<Mapping />} />
-          <Route path="/create-customer" element={<CreateCustomerForm />} />
-          <Route path="/create-movie" element={<CreateMovieForm />} />
-          <Route path="/create-rental" element={<CreateRentalForm />} />
-          <Route path="/create-people" element={<CreatePeopleForm />} />
-          <Route path="/create-genre" element={<CreateGenreForm />} />
-          <Route path="/create-mapping" element={<CreateMappingForm />} />
-          <Route path="/update-customer" element={<UpdateCustomerForm />} />
-          <Route path="/update-movie" element={<UpdateMovieForm />} />
-          <Route path="/update-rental" element={<UpdateRentalForm />} />
-          <Route path="/update-people" element={<UpdatePeopleForm />} />
-          <Route path="/update-genre" element={<UpdateGenreForm />} />
-          <Route path="/update-mapping" element={<UpdateMappingForm />} />
         </Routes>
       </div>
     </Router>

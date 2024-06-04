@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import httpClient from "../utils/axiosInterceptor";
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
@@ -46,8 +47,8 @@ const Customers = () => {
   };
 
   const addCustomer = () => {
-    axios
-      .post("http://classwork.engr.oregonstate.edu:5273/api/customers", newCustomer)
+    httpClient
+      .post("/customers", newCustomer)
       .then(() => {
         fetchCustomers();
         setNewCustomer({
@@ -66,8 +67,8 @@ const Customers = () => {
   };
 
   const updateCustomer = (customerID) => {
-    axios
-      .put(`http://classwork.engr.oregonstate.edu:5273/api/customers/${customerID}`, editCustomer)
+    httpClient
+      .put(`/customers/${customerID}`, editCustomer)
       .then(() => {
         fetchCustomers();
         setEditCustomer(null);
@@ -79,8 +80,8 @@ const Customers = () => {
   };
 
   const deleteCustomer = (customerID) => {
-    axios
-      .delete(`http://classwork.engr.oregonstate.edu:5273/api/customers/${customerID}`)
+    httpClient
+      .delete(`/customers/${customerID}`)
       .then(() => {
         fetchCustomers();
       })
