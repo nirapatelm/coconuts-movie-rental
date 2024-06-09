@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { DataGrid } from "@mui/x-data-grid";
+import { Button, Grid, TextField, Container } from "@mui/material";
 import httpClient from "../utils/axiosInterceptor";
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
-  const [newCustomer, setNewCustomer] = useState({
+  const [customerForm, setCustomerForm] = useState({
+    customerID: "",
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
-    address: ""
+    address: "",
   });
-  const [editCustomer, setEditCustomer] = useState(null);
   const [isAddFormVisible, setAddFormVisible] = useState(false);
   const [isEditFormVisible, setEditFormVisible] = useState(false);
 
@@ -20,8 +21,8 @@ const Customers = () => {
   }, []);
 
   const fetchCustomers = () => {
-    axios
-      .get("http://classwork.engr.oregonstate.edu:5273/api/customers")
+    httpClient
+      .get("/customers")
       .then((response) => {
         setCustomers(response.data);
       })
@@ -32,33 +33,18 @@ const Customers = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewCustomer({
-      ...newCustomer,
+    setCustomerForm({
+      ...customerForm,
       [name]: value,
     });
   };
 
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    setEditCustomer((prevEditCustomer) => ({
-      ...prevEditCustomer,
-      [name]: value,
-    }));
-  };
-
   const addCustomer = () => {
     httpClient
-      .post("/customers", newCustomer)
+      .post("/customers", customerForm)
       .then(() => {
         fetchCustomers();
-        setNewCustomer({
-          customerID: "",
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          address: ""
-        });
+        resetForm();
         setAddFormVisible(false);
       })
       .catch((error) => {
@@ -68,10 +54,10 @@ const Customers = () => {
 
   const updateCustomer = (customerID) => {
     httpClient
-      .put(`/customers/${customerID}`, editCustomer)
+      .put(`/customers/${customerID}`, customerForm)
       .then(() => {
         fetchCustomers();
-        setEditCustomer(null);
+        resetForm();
         setEditFormVisible(false);
       })
       .catch((error) => {
@@ -90,151 +76,163 @@ const Customers = () => {
       });
   };
 
+  const resetForm = () => {
+    setCustomerForm({
+      customerID: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      address: "",
+    });
+  };
+
+  const openEditForm = (customer) => {
+    setCustomerForm(customer);
+    setEditFormVisible(true);
+    setAddFormVisible(false);
+  };
+
+  const columns = [
+    { field: "customerID", headerName: "Customer ID", width: 150 },
+    { field: "firstName", headerName: "First Name", width: 150 },
+    { field: "lastName", headerName: "Last Name", width: 150 },
+    { field: "email", headerName: "Email", width: 250 },
+    { field: "phone", headerName: "Phone", width: 150 },
+    { field: "address", headerName: "Address", width: 300 },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 200,
+      renderCell: (params) => (
+        <>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => openEditForm(params.row)}
+            style={{ marginRight: 8 }}
+          >
+            Edit
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => deleteCustomer(params.row.customerID)}
+          >
+            Delete
+          </Button>
+        </>
+      ),
+    },
+  ];
+
   return (
-    <div>
+    <Container>
       <h1>Customers</h1>
-      <button onClick={() => setAddFormVisible(!isAddFormVisible)}>
+      <Button
+        sx={{
+          margin: "20px",
+        }}
+        variant="contained"
+        onClick={() => setAddFormVisible(!isAddFormVisible)}
+      >
         {isAddFormVisible ? "Cancel" : "Add New Customer"}
-      </button>
+      </Button>
       {isAddFormVisible && (
         <div>
           <h2>Add New Customer</h2>
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            value={newCustomer.firstName}
-            onChange={handleInputChange}
+          <CustomerForm
+            customer={customerForm}
+            handleInputChange={handleInputChange}
+            handleSubmit={addCustomer}
           />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            value={newCustomer.lastName}
-            onChange={handleInputChange}
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={newCustomer.email}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="phone"
-            placeholder="Phone"
-            value={newCustomer.phone}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="address"
-            placeholder="Address"
-            value={newCustomer.address}
-            onChange={handleInputChange}
-          />
-          <button onClick={addCustomer}>Add Customer</button>
         </div>
       )}
-      <table>
-        <thead>
-          <tr>
-            <th>Customer ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Address</th>
-          </tr>
-        </thead>
-        <tbody>
-          {customers.map((customer) => (
-            <tr key={customer.customerID}>
-              <td>{customer.customerID}</td>
-              <td>{customer.firstName}</td>
-              <td>{customer.lastName}</td>
-              <td>{customer.email}</td>
-              <td>{customer.phone}</td>
-              <td>{customer.address}</td>
-              <td>
-                <button
-                  onClick={() => {
-                    setEditCustomer(customer);
-                    setEditFormVisible(true);
-                  }}
-                >
-                  Edit
-                </button>
-                <button onClick={() => deleteCustomer(customer.customerID)}>
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {isEditFormVisible && editCustomer && (
+      <div style={{ height: 600, width: "100%" }}>
+        <DataGrid
+          rows={customers}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[10]}
+          getRowId={(row) => row.customerID}
+        />
+      </div>
+      {isEditFormVisible && (
         <div>
           <h2>Edit Customer</h2>
-          <input
-            type="text"
-            name="customerID"
-            placeholder="Customer ID"
-            value={editCustomer.customerID}
-            onChange={handleEditChange}
-            disabled
+          <CustomerForm
+            customer={customerForm}
+            handleInputChange={handleInputChange}
+            handleSubmit={() => updateCustomer(customerForm.customerID)}
           />
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            value={editCustomer.firstName}
-            onChange={handleEditChange}
-          />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            value={editCustomer.lastName}
-            onChange={handleEditChange}
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={editCustomer.email}
-            onChange={handleEditChange}
-          />
-          <input
-            type="text"
-            name="phone"
-            placeholder="Phone"
-            value={editCustomer.phone}
-            onChange={handleEditChange}
-          />
-          <input
-            type="text"
-            name="address"
-            placeholder="Address"
-            value={editCustomer.address}
-            onChange={handleEditChange}
-          />
-          <button onClick={() => updateCustomer(editCustomer.customerID)}>
-            Update Customer
-          </button>
-          <button
+          <Button
+            variant="contained"
             onClick={() => {
-              setEditCustomer(null);
+              resetForm();
               setEditFormVisible(false);
             }}
           >
             Cancel
-          </button>
+          </Button>
         </div>
       )}
-    </div>
+    </Container>
   );
 };
+
+const CustomerForm = ({ customer, handleInputChange, handleSubmit }) => (
+  <Grid container spacing={2}>
+    <Grid item xs={12} sm={6}>
+      <TextField
+        fullWidth
+        label="First Name"
+        name="firstName"
+        value={customer.firstName}
+        onChange={handleInputChange}
+      />
+    </Grid>
+    <Grid item xs={12} sm={6}>
+      <TextField
+        fullWidth
+        label="Last Name"
+        name="lastName"
+        value={customer.lastName}
+        onChange={handleInputChange}
+      />
+    </Grid>
+    <Grid item xs={12} sm={6}>
+      <TextField
+        fullWidth
+        label="Email"
+        name="email"
+        value={customer.email}
+        onChange={handleInputChange}
+      />
+    </Grid>
+    <Grid item xs={12} sm={6}>
+      <TextField
+        fullWidth
+        label="Phone"
+        name="phone"
+        value={customer.phone}
+        onChange={handleInputChange}
+      />
+    </Grid>
+    <Grid item xs={12}>
+      <TextField
+        fullWidth
+        label="Address"
+        name="address"
+        value={customer.address}
+        onChange={handleInputChange}
+      />
+    </Grid>
+    <Grid item xs={12}>
+      <Button variant="contained" onClick={handleSubmit}>
+        {customer.customerID ? "Update Customer" : "Add Customer"}
+      </Button>
+    </Grid>
+  </Grid>
+);
 
 export default Customers;

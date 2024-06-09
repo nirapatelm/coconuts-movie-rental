@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { DataGrid } from "@mui/x-data-grid";
+import { Button, Container, Grid, TextField, Box } from "@mui/material";
+import httpClient from "../utils/axiosInterceptor";
 
 const People = () => {
   const [people, setPeople] = useState([]);
@@ -13,8 +15,8 @@ const People = () => {
   }, []);
 
   const fetchPeople = () => {
-    axios
-      .get("http://classwork.engr.oregonstate.edu:5273/api/people")
+    httpClient
+      .get("/people")
       .then((response) => {
         setPeople(response.data);
       })
@@ -40,8 +42,8 @@ const People = () => {
   };
 
   const addPerson = () => {
-    axios
-      .post("http://classwork.engr.oregonstate.edu:5273/api/people", newPerson)
+    httpClient
+      .post("/people", newPerson)
       .then(() => {
         fetchPeople();
         setNewPerson({ firstName: "", lastName: "" });
@@ -53,11 +55,8 @@ const People = () => {
   };
 
   const updatePerson = (nameID) => {
-    axios
-      .put(
-        `http://classwork.engr.oregonstate.edu:5273/api/people/${nameID}`,
-        editPerson
-      )
+    httpClient
+      .put(`/people/${nameID}`, editPerson)
       .then(() => {
         fetchPeople(); // Refresh people after update
         setEditPerson(null);
@@ -69,8 +68,8 @@ const People = () => {
   };
 
   const deletePerson = (nameID) => {
-    axios
-      .delete(`http://classwork.engr.oregonstate.edu:5273/api/people/${nameID}`)
+    httpClient
+      .delete(`/people/${nameID}`)
       .then(() => {
         fetchPeople();
       })
@@ -79,95 +78,127 @@ const People = () => {
       });
   };
 
-  return (
-    <div>
-      <h1>People</h1>
-      <button onClick={() => setAddFormVisible(!isAddFormVisible)}>
-        {isAddFormVisible ? "Cancel" : "Add new Person"}
-      </button>
-      {isAddFormVisible && (
-        <div>
-          <h2>Add New Person</h2>
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First name"
-            value={newPerson.firstName}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last name"
-            value={newPerson.lastName}
-            onChange={handleInputChange}
-          />
-          <button onClick={addPerson}>Add Person</button>
-        </div>
-      )}
-      <table>
-        <thead>
-          <tr>
-            <th>Name ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {people.map((person) => (
-            <tr key={person.nameID}>
-              <td>{person.nameID}</td>
-              <td>{person.firstName}</td>
-              <td>{person.lastName}</td>
-              <td>
-                <button
-                  onClick={() => {
-                    setEditPerson(person);
-                    setEditFormVisible(true);
-                  }}
-                >
-                  Edit
-                </button>
-                <button onClick={() => deletePerson(person.nameID)}>
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {isEditFormVisible && editPerson && (
-        <div>
-          <h2>Edit Person</h2>
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First name"
-            value={editPerson.firstName}
-            onChange={handleEditChange}
-          />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last name"
-            value={editPerson.lastName}
-            onChange={handleEditChange}
-          />
-          <button onClick={() => updatePerson(editPerson.nameID)}>
-            Update Person
-          </button>
-          <button
+  const columns = [
+    { field: 'nameID', headerName: 'Name ID', width: 150 },
+    { field: 'firstName', headerName: 'First Name', width: 150 },
+    { field: 'lastName', headerName: 'Last Name', width: 150 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 200,
+      renderCell: (params) => (
+        <>
+          <Button
+            variant="contained"
+            color="primary"
             onClick={() => {
-              setEditPerson(null);
-              setEditFormVisible(false);
+              setEditPerson(params.row);
+              setEditFormVisible(true);
+              setAddFormVisible(false);
             }}
+            style={{ marginRight: 8 }}
           >
-            Cancel
-          </button>
-        </div>
+            Edit
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => deletePerson(params.row.nameID)}
+          >
+            Delete
+          </Button>
+        </>
+      ),
+    },
+  ];
+
+  return (
+    <Container>
+      <h1>People</h1>
+      <Button variant="contained" onClick={() => setAddFormVisible(!isAddFormVisible)}>
+        {isAddFormVisible ? "Cancel" : "Add New Person"}
+      </Button>
+      {isAddFormVisible && (
+        <Box my={2}>
+          <h2>Add New Person</h2>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="First Name"
+                name="firstName"
+                value={newPerson.firstName}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Last Name"
+                name="lastName"
+                value={newPerson.lastName}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button variant="contained" onClick={addPerson}>
+                Add Person
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
       )}
-    </div>
+      <Box my={2} style={{ height: 600, width: '100%' }}>
+        <DataGrid
+          rows={people}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[10]}
+          getRowId={(row) => row.nameID}
+        />
+      </Box>
+      {isEditFormVisible && editPerson && (
+        <Box my={2}>
+          <h2>Edit Person</h2>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="First Name"
+                name="firstName"
+                value={editPerson.firstName}
+                onChange={handleEditChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Last Name"
+                name="lastName"
+                value={editPerson.lastName}
+                onChange={handleEditChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button variant="contained" onClick={() => updatePerson(editPerson.nameID)}>
+                Update Person
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => {
+                  setEditPerson(null);
+                  setEditFormVisible(false);
+                }}
+                style={{ marginLeft: 8 }}
+              >
+                Cancel
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+      )}
+    </Container>
   );
 };
 

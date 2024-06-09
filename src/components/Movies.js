@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { DataGrid } from "@mui/x-data-grid";
+import { Button, Container, Grid, TextField, Box, Checkbox, FormControlLabel } from "@mui/material";
+import httpClient from "../utils/axiosInterceptor";
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
@@ -18,8 +20,8 @@ const Movies = () => {
   }, []);
 
   const fetchMovies = () => {
-    axios
-      .get("http://classwork.engr.oregonstate.edu:5273/api/movies")
+    httpClient
+      .get("/movies")
       .then((response) => {
         setMovies(response.data);
       })
@@ -45,8 +47,8 @@ const Movies = () => {
   };
 
   const addMovie = () => {
-    axios
-      .post("http://classwork.engr.oregonstate.edu:5273/api/movies", newMovie)
+    httpClient
+      .post("/movies", newMovie)
       .then(() => {
         fetchMovies();
         setNewMovie({
@@ -63,15 +65,10 @@ const Movies = () => {
   };
 
   const updateMovie = (movieID) => {
-    console.log(`Updating movie with ID: ${movieID}`); // Debugging line
-    console.log(`Movie data: `, editMovie); // Debugging line
-    axios
-      .put(
-        `http://classwork.engr.oregonstate.edu:5273/api/movies/${movieID}`,
-        editMovie
-      )
+    httpClient
+      .put(`/movies/${movieID}`, editMovie)
       .then(() => {
-        fetchMovies(); // Refresh movies after update
+        fetchMovies();
         setEditMovie(null);
         setEditFormVisible(false);
       })
@@ -81,10 +78,8 @@ const Movies = () => {
   };
 
   const deleteMovie = (movieID) => {
-    axios
-      .delete(
-        `http://classwork.engr.oregonstate.edu:5273/api/movies/${movieID}`
-      )
+    httpClient
+      .delete(`/movies/${movieID}`)
       .then(() => {
         fetchMovies();
       })
@@ -93,131 +88,173 @@ const Movies = () => {
       });
   };
 
-  return (
-    <div>
-      <h1>Movies</h1>
-      <button onClick={() => setAddFormVisible(!isAddFormVisible)}>
-        {isAddFormVisible ? "Cancel" : "Add New Movie"}
-      </button>
-      {isAddFormVisible && (
-        <div>
-          <h2>Add New Movie</h2>
-          <input
-            type="text"
-            name="title"
-            placeholder="Title"
-            value={newMovie.title}
-            onChange={handleInputChange}
-          />
-          <input
-            type="number"
-            name="releaseYear"
-            placeholder="Release Year"
-            value={newMovie.releaseYear}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="rating"
-            placeholder="Rating"
-            value={newMovie.rating}
-            onChange={handleInputChange}
-          />
-          <label>
-            Availability:
-            <input
-              type="checkbox"
-              name="availability"
-              checked={newMovie.availability}
-              onChange={handleInputChange}
-            />
-          </label>
-          <button onClick={addMovie}>Add Movie</button>
-        </div>
-      )}
-      <table>
-        <thead>
-          <tr>
-            <th>Movie ID</th>
-            <th>Title</th>
-            <th>Release Year</th>
-            <th>Rating</th>
-            <th>Availability</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {movies.map((movie) => (
-            <tr key={movie.movieID}>
-              <td>{movie.movieID}</td>
-              <td>{movie.title}</td>
-              <td>{movie.releaseYear}</td>
-              <td>{movie.rating}</td>
-              <td>{movie.availability ? "Available" : "Not Available"}</td>
-              <td>
-                <button
-                  onClick={() => {
-                    setEditMovie(movie);
-                    setEditFormVisible(true);
-                  }}
-                >
-                  Edit
-                </button>
-                <button onClick={() => deleteMovie(movie.movieID)}>
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {isEditFormVisible && editMovie && (
-        <div>
-          <h2>Edit Movie</h2>
-          <input
-            type="text"
-            name="title"
-            placeholder="Title"
-            value={editMovie.title}
-            onChange={handleEditChange}
-          />
-          <input
-            type="number"
-            name="releaseYear"
-            placeholder="Release Year"
-            value={editMovie.releaseYear}
-            onChange={handleEditChange}
-          />
-          <input
-            type="text"
-            name="rating"
-            placeholder="Rating"
-            value={editMovie.rating}
-            onChange={handleEditChange}
-          />
-          <label>
-            Availability:
-            <input
-              type="checkbox"
-              name="availability"
-              checked={editMovie.availability}
-              onChange={handleEditChange}
-            />
-          </label>
-          <button onClick={() => updateMovie(editMovie.movieID)}>
-            Update Movie
-          </button>
-          <button
+  const columns = [
+    { field: 'movieID', headerName: 'Movie ID', width: 150 },
+    { field: 'title', headerName: 'Title', width: 300 },
+    { field: 'releaseYear', headerName: 'Release Year', width: 150 },
+    { field: 'rating', headerName: 'Rating', width: 150 },
+    { field: 'availability', headerName: 'Availability', width: 150, renderCell: (params) => params.value ? "Available" : "Not Available" },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 200,
+      renderCell: (params) => (
+        <>
+          <Button
+            variant="contained"
+            color="primary"
             onClick={() => {
-              setEditMovie(null);
-              setEditFormVisible(false);
+              setEditMovie(params.row);
+              setEditFormVisible(true);
+              setAddFormVisible(false);
             }}
+            style={{ marginRight: 8 }}
           >
-            Cancel
-          </button>
-        </div>
+            Edit
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => deleteMovie(params.row.movieID)}
+          >
+            Delete
+          </Button>
+        </>
+      ),
+    },
+  ];
+
+  return (
+    <Container>
+      <h1>Movies</h1>
+      <Button variant="contained" onClick={() => setAddFormVisible(!isAddFormVisible)}>
+        {isAddFormVisible ? "Cancel" : "Add New Movie"}
+      </Button>
+      {isAddFormVisible && (
+        <Box my={2}>
+          <h2>Add New Movie</h2>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Title"
+                name="title"
+                value={newMovie.title}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="Release Year"
+                name="releaseYear"
+                value={newMovie.releaseYear}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Rating"
+                name="rating"
+                value={newMovie.rating}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="availability"
+                    checked={newMovie.availability}
+                    onChange={handleInputChange}
+                  />
+                }
+                label="Availability"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button variant="contained" onClick={addMovie}>
+                Add Movie
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
       )}
-    </div>
+      <Box my={2} style={{ height: 600, width: '100%' }}>
+        <DataGrid
+          rows={movies}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[10]}
+          getRowId={(row) => row.movieID}
+        />
+      </Box>
+      {isEditFormVisible && editMovie && (
+        <Box my={2}>
+          <h2>Edit Movie</h2>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Title"
+                name="title"
+                value={editMovie.title}
+                onChange={handleEditChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="Release Year"
+                name="releaseYear"
+                value={editMovie.releaseYear}
+                onChange={handleEditChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Rating"
+                name="rating"
+                value={editMovie.rating}
+                onChange={handleEditChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="availability"
+                    checked={editMovie.availability}
+                    onChange={handleEditChange}
+                  />
+                }
+                label="Availability"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button variant="contained" onClick={() => updateMovie(editMovie.movieID)}>
+                Update Movie
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => {
+                  setEditMovie(null);
+                  setEditFormVisible(false);
+                }}
+                style={{ marginLeft: 8 }}
+              >
+                Cancel
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+      )}
+    </Container>
   );
 };
 

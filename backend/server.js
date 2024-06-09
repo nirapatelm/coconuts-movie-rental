@@ -47,7 +47,7 @@ app.get("/api/movies", (req, res) => {
 app.post("/api/movies", (req, res) => {
   const { title, releaseYear, rating, availability } = req.body;
   const query =
-    "INSERT INTO Movies (movieID, title, releaseYear, rating, availability) VALUES (UUID(), ?, ?, ?, ?)";
+    "INSERT INTO Movies ( title, releaseYear, rating, availability) VALUES (?, ?, ?, ?)";
   db.query(query, [title, releaseYear, rating, availability], (err, result) => {
     if (err) {
       console.error("Error adding movie: " + err.stack);
@@ -369,6 +369,71 @@ app.delete("/api/people/:id", (req, res) => {
       return;
     }
     res.send("Person deleted successfully");
+  });
+});
+
+
+// Fetch all mappings
+app.get("/api/mappings", (req, res) => {
+  const query = "SELECT * FROM Mapping";
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching mappings: " + err.stack);
+      res.status(500).send("Error fetching mappings");
+      return;
+    }
+    res.json(results);
+  });
+});
+
+// Add a new mapping
+app.post("/api/mappings", (req, res) => {
+  const { genreID, movieID } = req.body;
+  const query = "INSERT INTO Mapping (genreID, movieID) VALUES (?, ?)";
+  db.query(query, [genreID, movieID], (err, result) => {
+    if (err) {
+      console.error("Error adding mapping: " + err.stack);
+      res.status(500).send("Error adding mapping");
+      return;
+    }
+    res.send("Mapping added successfully");
+  });
+});
+
+// Update a mapping
+app.put("/api/mappings/:id", (req, res) => {
+  const mappingID = req.params.id;
+  const { genreID, movieID } = req.body;
+  const query = "UPDATE Mapping SET genreID = ?, movieID = ? WHERE mappingID = ?";
+  db.query(query, [genreID, movieID, mappingID], (err, result) => {
+    if (err) {
+      console.error("Error updating mapping: " + err.stack);
+      res.status(500).send("Error updating mapping");
+      return;
+    }
+    if (result.affectedRows === 0) {
+      res.status(404).send("Mapping not found");
+      return;
+    }
+    res.send("Mapping updated successfully");
+  });
+});
+
+// Delete a mapping
+app.delete("/api/mappings/:id", (req, res) => {
+  const mappingID = req.params.id;
+  const query = "DELETE FROM Mapping WHERE mappingID = ?";
+  db.query(query, [mappingID], (err, result) => {
+    if (err) {
+      console.error("Error deleting mapping: " + err.stack);
+      res.status(500).send("Error deleting mapping");
+      return;
+    }
+    if (result.affectedRows === 0) {
+      res.status(404).send("Mapping not found");
+      return;
+    }
+    res.send("Mapping deleted successfully");
   });
 });
 
