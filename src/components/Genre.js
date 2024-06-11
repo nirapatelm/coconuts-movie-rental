@@ -4,16 +4,19 @@ import { Button, Container, Grid, TextField, Box } from "@mui/material";
 import httpClient from "../utils/axiosInterceptor";
 
 const Genre = () => {
+  // State variables to manage genres, new genre data, edit genre data, and form visibility
   const [genres, setGenres] = useState([]);
   const [newGenre, setNewGenre] = useState({ genreName: "" });
   const [editGenre, setEditGenre] = useState(null);
   const [isAddFormVisible, setAddFormVisible] = useState(false);
   const [isEditFormVisible, setEditFormVisible] = useState(false);
 
+  // Fetch initial data for genres
   useEffect(() => {
     fetchGenres();
   }, []);
 
+  // Fetch all genres from the server
   const fetchGenres = () => {
     httpClient
       .get("/genre")
@@ -25,6 +28,7 @@ const Genre = () => {
       });
   };
 
+  // Handle input changes for new genre form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewGenre({
@@ -33,6 +37,7 @@ const Genre = () => {
     });
   };
 
+  // Handle input changes for edit genre form
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditGenre((prevEditGenre) => ({
@@ -41,43 +46,47 @@ const Genre = () => {
     }));
   };
 
+  // Add a new genre to the server
   const addGenre = () => {
     httpClient
       .post("/genre", newGenre)
       .then(() => {
-        fetchGenres();
-        setNewGenre({ genreName: "" });
-        setAddFormVisible(false);
+        fetchGenres();  // Refresh the genre list
+        setNewGenre({ genreName: "" });  // Reset the new genre form
+        setAddFormVisible(false);  // Hide the add form
       })
       .catch((error) => {
         console.error("Error adding genre:", error);
       });
   };
 
+  // Update an existing genre on the server
   const updateGenre = (genreID) => {
     httpClient
       .put(`/genre/${genreID}`, editGenre)
       .then(() => {
-        fetchGenres();
-        setEditGenre(null);
-        setEditFormVisible(false);
+        fetchGenres();  // Refresh the genre list
+        setEditGenre(null);  // Reset the edit genre form
+        setEditFormVisible(false);  // Hide the edit form
       })
       .catch((error) => {
         console.error("Error updating genre:", error);
       });
   };
 
+  // Delete a genre from the server
   const deleteGenre = (genreID) => {
     httpClient
       .delete(`/genre/${genreID}`)
       .then(() => {
-        fetchGenres();
+        fetchGenres();  // Refresh the genre list
       })
       .catch((error) => {
         console.error("Error deleting genre:", error);
       });
   };
 
+  // Define columns for DataGrid
   const columns = [
     { field: "genreID", headerName: "Genre ID", width: 150 },
     { field: "genreName", headerName: "Genre Name", width: 300 },
@@ -91,9 +100,9 @@ const Genre = () => {
             variant="contained"
             color="primary"
             onClick={() => {
-              setEditGenre(params.row);
-              setEditFormVisible(true);
-              setAddFormVisible(false);
+              setEditGenre(params.row);  // Set the current genre data for editing
+              setEditFormVisible(true);  // Show the edit form
+              setAddFormVisible(false);  // Hide the add form
             }}
             style={{ marginRight: 8 }}
           >
@@ -102,7 +111,7 @@ const Genre = () => {
           <Button
             variant="contained"
             color="error"
-            onClick={() => deleteGenre(params.row.genreID)}
+            onClick={() => deleteGenre(params.row.genreID)}  // Delete the genre
           >
             Delete
           </Button>
@@ -111,13 +120,18 @@ const Genre = () => {
     },
   ];
 
+// Citation for the following function:
+// Date: June 2024
+// Original code using components from 
+// Material-UI (June 2024) Material-UI (v^5.0.0) [Library]. Retrieved from https://mui.com/
+
   return (
     <Container>
       <h1>Genres</h1>
       <p>This page displays a list of genres and allows adding, editing, and deleting genres.</p>
       <Button
         variant="contained"
-        onClick={() => setAddFormVisible(!isAddFormVisible)}
+        onClick={() => setAddFormVisible(!isAddFormVisible)}  // Toggle the visibility of the add form
       >
         {isAddFormVisible ? "Cancel" : "Add New Genre"}
       </Button>
@@ -131,7 +145,7 @@ const Genre = () => {
                 label="Genre Name"
                 name="genreName"
                 value={newGenre.genreName}
-                onChange={handleInputChange}
+                onChange={handleInputChange}  // Handle changes to the new genre form
               />
             </Grid>
             <Grid item xs={12}>
@@ -148,7 +162,7 @@ const Genre = () => {
           columns={columns}
           pageSize={10}
           rowsPerPageOptions={[10]}
-          getRowId={(row) => row.genreID}
+          getRowId={(row) => row.genreID}  // Use genreID as the unique identifier for each row
         />
       </Box>
       {isEditFormVisible && editGenre && (
@@ -161,13 +175,13 @@ const Genre = () => {
                 label="Genre Name"
                 name="genreName"
                 value={editGenre.genreName}
-                onChange={handleEditChange}
+                onChange={handleEditChange}  // Handle changes to the edit genre form
               />
             </Grid>
             <Grid item xs={12}>
               <Button
                 variant="contained"
-                onClick={() => updateGenre(editGenre.genreID)}
+                onClick={() => updateGenre(editGenre.genreID)}  // Update the genre
               >
                 Update Genre
               </Button>
@@ -175,8 +189,8 @@ const Genre = () => {
                 variant="contained"
                 color="error"
                 onClick={() => {
-                  setEditGenre(null);
-                  setEditFormVisible(false);
+                  setEditGenre(null);  // Reset the edit genre form
+                  setEditFormVisible(false);  // Hide the edit form
                 }}
                 style={{ marginLeft: 8 }}
               >

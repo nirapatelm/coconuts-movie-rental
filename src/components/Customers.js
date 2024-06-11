@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Button, Grid, TextField, Container } from "@mui/material";
-import httpClient from "../utils/axiosInterceptor";
+import httpClient from "../utils/axiosInterceptor"; // Custom axios instance for making HTTP requests
 
 const Customers = () => {
-  const [customers, setCustomers] = useState([]);
-  const [customerForm, setCustomerForm] = useState({
+  const [customers, setCustomers] = useState([]); // State to store list of customers
+  const [customerForm, setCustomerForm] = useState({ // State to manage form input values
     customerID: "",
     firstName: "",
     lastName: "",
@@ -13,18 +13,18 @@ const Customers = () => {
     phone: "",
     address: "",
   });
-  const [isAddFormVisible, setAddFormVisible] = useState(false);
-  const [isEditFormVisible, setEditFormVisible] = useState(false);
+  const [isAddFormVisible, setAddFormVisible] = useState(false); // State to toggle add form visibility
+  const [isEditFormVisible, setEditFormVisible] = useState(false); // State to toggle edit form visibility
 
   useEffect(() => {
-    fetchCustomers();
+    fetchCustomers(); // Fetch customers when the component mounts
   }, []);
 
   const fetchCustomers = () => {
     httpClient
       .get("/customers")
       .then((response) => {
-        setCustomers(response.data);
+        setCustomers(response.data); // Set fetched customers data to state
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -36,16 +36,16 @@ const Customers = () => {
     setCustomerForm({
       ...customerForm,
       [name]: value,
-    });
+    }); // Update form state on input change
   };
 
   const addCustomer = () => {
     httpClient
       .post("/customers", customerForm)
       .then(() => {
-        fetchCustomers();
-        resetForm();
-        setAddFormVisible(false);
+        fetchCustomers(); // Refresh customer list after adding new customer
+        resetForm(); // Reset form fields
+        setAddFormVisible(false); // Hide add form
       })
       .catch((error) => {
         console.error("Error adding customer:", error);
@@ -56,9 +56,9 @@ const Customers = () => {
     httpClient
       .put(`/customers/${customerID}`, customerForm)
       .then(() => {
-        fetchCustomers();
-        resetForm();
-        setEditFormVisible(false);
+        fetchCustomers(); // Refresh customer list after updating customer
+        resetForm(); // Reset form fields
+        setEditFormVisible(false); // Hide edit form
       })
       .catch((error) => {
         console.error("Error updating customer:", error);
@@ -69,7 +69,7 @@ const Customers = () => {
     httpClient
       .delete(`/customers/${customerID}`)
       .then(() => {
-        fetchCustomers();
+        fetchCustomers(); // Refresh customer list after deleting customer
       })
       .catch((error) => {
         console.error("Error deleting customer:", error);
@@ -84,13 +84,13 @@ const Customers = () => {
       email: "",
       phone: "",
       address: "",
-    });
+    }); // Reset form fields to initial state
   };
 
   const openEditForm = (customer) => {
-    setCustomerForm(customer);
-    setEditFormVisible(true);
-    setAddFormVisible(false);
+    setCustomerForm(customer); // Populate form with selected customer data
+    setEditFormVisible(true); // Show edit form
+    setAddFormVisible(false); // Hide add form
   };
 
   const columns = [
@@ -109,7 +109,7 @@ const Customers = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => openEditForm(params.row)}
+            onClick={() => openEditForm(params.row)} // Open edit form with selected customer data
             style={{ marginRight: 8 }}
           >
             Edit
@@ -117,7 +117,7 @@ const Customers = () => {
           <Button
             variant="contained"
             color="error"
-            onClick={() => deleteCustomer(params.row.customerID)}
+            onClick={() => deleteCustomer(params.row.customerID)} // Delete selected customer
           >
             Delete
           </Button>
@@ -126,6 +126,10 @@ const Customers = () => {
     },
   ];
 
+// Citation for the following function:
+// Date: June 2024
+// Original code using components from 
+// Material-UI (June 2024) Material-UI (v^5.0.0) [Library]. Retrieved from https://mui.com/
   return (
     <Container>
       <h1>Customers</h1>
@@ -135,7 +139,7 @@ const Customers = () => {
           margin: "20px",
         }}
         variant="contained"
-        onClick={() => setAddFormVisible(!isAddFormVisible)}
+        onClick={() => setAddFormVisible(!isAddFormVisible)} // Toggle add form visibility
       >
         {isAddFormVisible ? "Cancel" : "Add New Customer"}
       </Button>
@@ -145,7 +149,7 @@ const Customers = () => {
           <CustomerForm
             customer={customerForm}
             handleInputChange={handleInputChange}
-            handleSubmit={addCustomer}
+            handleSubmit={addCustomer} // Add customer on form submit
           />
         </div>
       )}
@@ -164,13 +168,13 @@ const Customers = () => {
           <CustomerForm
             customer={customerForm}
             handleInputChange={handleInputChange}
-            handleSubmit={() => updateCustomer(customerForm.customerID)}
+            handleSubmit={() => updateCustomer(customerForm.customerID)} // Update customer on form submit
           />
           <Button
             variant="contained"
             onClick={() => {
               resetForm();
-              setEditFormVisible(false);
+              setEditFormVisible(false); // Hide edit form on cancel
             }}
           >
             Cancel
@@ -181,6 +185,7 @@ const Customers = () => {
   );
 };
 
+// Reusable customer form component
 const CustomerForm = ({ customer, handleInputChange, handleSubmit }) => (
   <Grid container spacing={2}>
     <Grid item xs={12} sm={6}>

@@ -4,16 +4,19 @@ import { Button, Container, Grid, TextField, Box } from "@mui/material";
 import httpClient from "../utils/axiosInterceptor";
 
 const People = () => {
+  // State variables
   const [people, setPeople] = useState([]);
   const [newPerson, setNewPerson] = useState({ firstName: "", lastName: "" });
   const [editPerson, setEditPerson] = useState(null);
   const [isAddFormVisible, setAddFormVisible] = useState(false);
   const [isEditFormVisible, setEditFormVisible] = useState(false);
 
+  // Fetch people on component mount
   useEffect(() => {
     fetchPeople();
   }, []);
 
+  // Fetch people from server
   const fetchPeople = () => {
     httpClient
       .get("/people")
@@ -25,6 +28,7 @@ const People = () => {
       });
   };
 
+  // Handle input change in add form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewPerson({
@@ -33,6 +37,7 @@ const People = () => {
     });
   };
 
+  // Handle input change in edit form
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditPerson((prevEditPerson) => ({
@@ -41,11 +46,12 @@ const People = () => {
     }));
   };
 
+  // Add a new person
   const addPerson = () => {
     httpClient
       .post("/people", newPerson)
       .then(() => {
-        fetchPeople();
+        fetchPeople(); // Refresh people after adding
         setNewPerson({ firstName: "", lastName: "" });
         setAddFormVisible(false);
       })
@@ -54,6 +60,7 @@ const People = () => {
       });
   };
 
+  // Update person details
   const updatePerson = (nameID) => {
     httpClient
       .put(`/people/${nameID}`, editPerson)
@@ -67,17 +74,19 @@ const People = () => {
       });
   };
 
+  // Delete person
   const deletePerson = (nameID) => {
     httpClient
       .delete(`/people/${nameID}`)
       .then(() => {
-        fetchPeople();
+        fetchPeople(); // Refresh people after delete
       })
       .catch((error) => {
         console.error("Error deleting person:", error);
       });
   };
 
+  // Columns configuration for DataGrid
   const columns = [
     { field: 'nameID', headerName: 'Name ID', width: 150 },
     { field: 'firstName', headerName: 'First Name', width: 150 },
@@ -88,6 +97,7 @@ const People = () => {
       width: 200,
       renderCell: (params) => (
         <>
+          {/* Edit button */}
           <Button
             variant="contained"
             color="primary"
@@ -100,6 +110,7 @@ const People = () => {
           >
             Edit
           </Button>
+          {/* Delete button */}
           <Button
             variant="contained"
             color="error"
@@ -112,15 +123,21 @@ const People = () => {
     },
   ];
 
+// Citation for the following function:
+// Date: June 2024
+// Original code using components from 
+// Material-UI (June 2024) Material-UI (v^5.0.0) [Library]. Retrieved from https://mui.com/
   return (
     <Container>
       <h1>People</h1>
       <p>This page displays a list of people and allows adding, editing, and deleting people. People can be directors or actors/actresses.</p>
+      {/* Toggle Add New Person form */}
       <Button variant="contained" onClick={() => setAddFormVisible(!isAddFormVisible)}>
         {isAddFormVisible ? "Cancel" : "Add New Person"}
       </Button>
       {isAddFormVisible && (
         <Box my={2}>
+          {/* Add New Person Form */}
           <h2>Add New Person</h2>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
@@ -142,6 +159,7 @@ const People = () => {
               />
             </Grid>
             <Grid item xs={12}>
+              {/* Add Person button */}
               <Button variant="contained" onClick={addPerson}>
                 Add Person
               </Button>
@@ -150,6 +168,7 @@ const People = () => {
         </Box>
       )}
       <Box my={2} style={{ height: 600, width: '100%' }}>
+        {/* DataGrid to display people */}
         <DataGrid
           rows={people}
           columns={columns}
@@ -160,6 +179,7 @@ const People = () => {
       </Box>
       {isEditFormVisible && editPerson && (
         <Box my={2}>
+          {/* Edit Person Form */}
           <h2>Edit Person</h2>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
@@ -181,6 +201,7 @@ const People = () => {
               />
             </Grid>
             <Grid item xs={12}>
+              {/* Update Person and Cancel buttons */}
               <Button variant="contained" onClick={() => updatePerson(editPerson.nameID)}>
                 Update Person
               </Button>

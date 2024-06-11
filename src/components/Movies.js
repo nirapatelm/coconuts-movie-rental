@@ -4,6 +4,7 @@ import { Button, Container, Grid, TextField, Box, Checkbox, FormControlLabel } f
 import httpClient from "../utils/axiosInterceptor";
 
 const Movies = () => {
+  // State variables
   const [movies, setMovies] = useState([]);
   const [newMovie, setNewMovie] = useState({
     title: "",
@@ -15,10 +16,12 @@ const Movies = () => {
   const [isAddFormVisible, setAddFormVisible] = useState(false);
   const [isEditFormVisible, setEditFormVisible] = useState(false);
 
+  // Fetch movies on component mount
   useEffect(() => {
     fetchMovies();
   }, []);
 
+  // Fetch movies from server
   const fetchMovies = () => {
     httpClient
       .get("/movies")
@@ -30,6 +33,7 @@ const Movies = () => {
       });
   };
 
+  // Handle input change in add form
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setNewMovie({
@@ -38,6 +42,7 @@ const Movies = () => {
     });
   };
 
+  // Handle input change in edit form
   const handleEditChange = (e) => {
     const { name, value, type, checked } = e.target;
     setEditMovie((prevEditMovie) => ({
@@ -46,6 +51,7 @@ const Movies = () => {
     }));
   };
 
+  // Add a new movie
   const addMovie = () => {
     httpClient
       .post("/movies", newMovie)
@@ -64,6 +70,7 @@ const Movies = () => {
       });
   };
 
+  // Update movie details
   const updateMovie = (movieID) => {
     httpClient
       .put(`/movies/${movieID}`, editMovie)
@@ -77,6 +84,7 @@ const Movies = () => {
       });
   };
 
+  // Delete movie
   const deleteMovie = (movieID) => {
     httpClient
       .delete(`/movies/${movieID}`)
@@ -88,6 +96,7 @@ const Movies = () => {
       });
   };
 
+  // Columns configuration for DataGrid
   const columns = [
     { field: 'movieID', headerName: 'Movie ID', width: 150 },
     { field: 'title', headerName: 'Title', width: 300 },
@@ -124,15 +133,21 @@ const Movies = () => {
     },
   ];
 
+// Citation for the following function:
+// Date: June 2024
+// Original code using components from 
+// Material-UI (June 2024) Material-UI (v^5.0.0) [Library]. Retrieved from https://mui.com/
   return (
     <Container>
       <h1>Movies</h1>
       <p>This page displays a list of movies and allows adding, editing, and deleting movies.</p>
+      {/* Toggle Add New Movie form */}
       <Button variant="contained" onClick={() => setAddFormVisible(!isAddFormVisible)}>
         {isAddFormVisible ? "Cancel" : "Add New Movie"}
       </Button>
       {isAddFormVisible && (
         <Box my={2}>
+          {/* Add New Movie Form */}
           <h2>Add New Movie</h2>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
@@ -184,6 +199,7 @@ const Movies = () => {
         </Box>
       )}
       <Box my={2} style={{ height: 600, width: '100%' }}>
+        {/* DataGrid to display movies */}
         <DataGrid
           rows={movies}
           columns={columns}
@@ -194,6 +210,7 @@ const Movies = () => {
       </Box>
       {isEditFormVisible && editMovie && (
         <Box my={2}>
+          {/* Edit Movie Form */}
           <h2>Edit Movie</h2>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
@@ -237,6 +254,7 @@ const Movies = () => {
               />
             </Grid>
             <Grid item xs={12}>
+              {/* Update Movie and Cancel buttons */}
               <Button variant="contained" onClick={() => updateMovie(editMovie.movieID)}>
                 Update Movie
               </Button>

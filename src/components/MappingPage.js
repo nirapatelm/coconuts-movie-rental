@@ -10,9 +10,10 @@ import {
   InputLabel,
   Select,
 } from "@mui/material";
-import httpClient from "../utils/axiosInterceptor";
+import httpClient from "../utils/axiosInterceptor"; // Custom axios instance for making HTTP requests
 
 const MappingsPage = () => {
+  // State to store mappings, genres, and movies
   const [mappings, setMappings] = useState([]);
   const [genres, setGenres] = useState([]);
   const [movies, setMovies] = useState([]);
@@ -30,6 +31,7 @@ const MappingsPage = () => {
     fetchMovies();
   }, []);
 
+  // Fetch mappings data from the server
   const fetchMappings = () => {
     httpClient
       .get("/mappings")
@@ -41,6 +43,7 @@ const MappingsPage = () => {
       });
   };
 
+  // Fetch genres data from the server
   const fetchGenres = () => {
     httpClient
       .get("/genre")
@@ -52,6 +55,7 @@ const MappingsPage = () => {
       });
   };
 
+  // Fetch movies data from the server
   const fetchMovies = () => {
     httpClient
       .get("/movies")
@@ -63,6 +67,7 @@ const MappingsPage = () => {
       });
   };
 
+  // Handle input changes for new mapping form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewMapping({
@@ -71,6 +76,7 @@ const MappingsPage = () => {
     });
   };
 
+  // Handle input changes for edit mapping form
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditMapping((prevEditMapping) => ({
@@ -79,46 +85,50 @@ const MappingsPage = () => {
     }));
   };
 
+  // Add a new mapping
   const addMapping = () => {
     httpClient
       .post("/mappings", newMapping)
       .then(() => {
-        fetchMappings();
+        fetchMappings(); // Refresh mappings list after adding new mapping
         setNewMapping({
           genreID: "",
           movieID: "",
         });
-        setAddFormVisible(false);
+        setAddFormVisible(false); // Hide add form
       })
       .catch((error) => {
         console.error("Error adding mapping:", error);
       });
   };
 
+  // Update an existing mapping
   const updateMapping = (mappingID) => {
     httpClient
       .put(`/mappings/${mappingID}`, editMapping)
       .then(() => {
-        fetchMappings();
-        setEditMapping(null);
-        setEditFormVisible(false);
+        fetchMappings(); // Refresh mappings list after updating mapping
+        setEditMapping(null); // Reset edit mapping state
+        setEditFormVisible(false); // Hide edit form
       })
       .catch((error) => {
         console.error("Error updating mapping:", error);
       });
   };
 
+  // Delete a mapping
   const deleteMapping = (mappingID) => {
     httpClient
       .delete(`/mappings/${mappingID}`)
       .then(() => {
-        fetchMappings();
+        fetchMappings(); // Refresh mappings list after deleting mapping
       })
       .catch((error) => {
         console.error("Error deleting mapping:", error);
       });
   };
 
+  // Define columns for DataGrid
   const columns = [
     { field: "mappingID", headerName: "Mapping ID", width: 150 },
     { field: "genreID", headerName: "Genre ID", width: 150 },
@@ -133,9 +143,9 @@ const MappingsPage = () => {
             variant="contained"
             color="primary"
             onClick={() => {
-              setEditMapping(params.row);
-              setEditFormVisible(true);
-              setAddFormVisible(false);
+              setEditMapping(params.row); // Set selected row data for editing
+              setEditFormVisible(true); // Show edit form
+              setAddFormVisible(false); // Hide add form
             }}
             style={{ marginRight: 8 }}
           >
@@ -144,7 +154,7 @@ const MappingsPage = () => {
           <Button
             variant="contained"
             color="error"
-            onClick={() => deleteMapping(params.row.mappingID)}
+            onClick={() => deleteMapping(params.row.mappingID)} // Delete selected mapping
           >
             Delete
           </Button>
@@ -153,13 +163,17 @@ const MappingsPage = () => {
     },
   ];
 
+// Citation for the following function:
+// Date: June 2024
+// Original code using components from 
+// Material-UI (June 2024) Material-UI (v^5.0.0) [Library]. Retrieved from https://mui.com/
   return (
     <Container>
       <h1>Mappings</h1>
       <p>This page displays a list of mappings between Movies and Genres and allows adding, editing, and deleting.</p>
       <Button
         variant="contained"
-        onClick={() => setAddFormVisible(!isAddFormVisible)}
+        onClick={() => setAddFormVisible(!isAddFormVisible)} // Toggle add form visibility
       >
         {isAddFormVisible ? "Cancel" : "Add New Mapping"}
       </Button>
@@ -263,8 +277,8 @@ const MappingsPage = () => {
                 variant="contained"
                 color="error"
                 onClick={() => {
-                  setEditMapping(null);
-                  setEditFormVisible(false);
+                  setEditMapping(null); // Reset edit mapping state
+                  setEditFormVisible(false); // Hide edit form
                 }}
                 style={{ marginLeft: 8 }}
               >

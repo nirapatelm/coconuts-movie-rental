@@ -13,6 +13,7 @@ import {
 import httpClient from "../utils/axiosInterceptor";
 
 const MoviePeople = () => {
+  // State variables
   const [moviePeople, setMoviePeople] = useState([]);
   const [people, setPeople] = useState([]);
   const [movies, setMovies] = useState([]);
@@ -24,12 +25,14 @@ const MoviePeople = () => {
   const [isAddFormVisible, setAddFormVisible] = useState(false);
   const [isEditFormVisible, setEditFormVisible] = useState(false);
 
+  // Fetch data on component mount
   useEffect(() => {
     fetchMoviePeople();
     fetchPeople();
     fetchMovies();
   }, []);
 
+  // Fetch movie people data
   const fetchMoviePeople = () => {
     httpClient
       .get("/moviepeople")
@@ -41,6 +44,7 @@ const MoviePeople = () => {
       });
   };
 
+  // Fetch people data
   const fetchPeople = () => {
     httpClient
       .get("/people")
@@ -52,6 +56,7 @@ const MoviePeople = () => {
       });
   };
 
+  // Fetch movies data
   const fetchMovies = () => {
     httpClient
       .get("/movies")
@@ -63,6 +68,7 @@ const MoviePeople = () => {
       });
   };
 
+  // Handle input change in add form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     console.log(people);
@@ -72,6 +78,7 @@ const MoviePeople = () => {
     });
   };
 
+  // Handle input change in edit form
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditMoviePeople((prevEditMoviePeople) => ({
@@ -80,6 +87,7 @@ const MoviePeople = () => {
     }));
   };
 
+  // Add new movie people
   const addMoviePeople = () => {
     httpClient
       .post("/moviepeople", newMoviePeople)
@@ -96,6 +104,7 @@ const MoviePeople = () => {
       });
   };
 
+  // Update movie people
   const updateMoviePeople = (moviePeopleID) => {
     httpClient
       .put(`/moviepeople/${moviePeopleID}`, editMoviePeople)
@@ -109,6 +118,7 @@ const MoviePeople = () => {
       });
   };
 
+  // Delete movie people
   const deleteMoviePeople = (moviePeopleID) => {
     httpClient
       .delete(`/moviepeople/${moviePeopleID}`)
@@ -120,6 +130,7 @@ const MoviePeople = () => {
       });
   };
 
+  // Columns for DataGrid
   const columns = [
     { field: "moviePeopleID", headerName: "Movie People ID", width: 150 },
     { field: "movieID", headerName: "Movie ID", width: 150 },
@@ -154,6 +165,10 @@ const MoviePeople = () => {
     },
   ];
 
+// Citation for the following function:
+// Date: June 2024
+// Original code using components from 
+// Material-UI (June 2024) Material-UI (v^5.0.0) [Library]. Retrieved from https://mui.com/
   return (
     <Container>
       <h1>Movie People</h1>

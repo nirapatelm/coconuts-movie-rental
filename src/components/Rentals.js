@@ -4,6 +4,7 @@ import { Button, Container, Grid, TextField, Box, FormControl, InputLabel, Selec
 import httpClient from "../utils/axiosInterceptor";
 
 const Rentals = () => {
+  // State variables to manage rentals, customers, movies, new rental data, edit rental data, and form visibility
   const [rentals, setRentals] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [movies, setMovies] = useState([]);
@@ -18,12 +19,14 @@ const Rentals = () => {
   const [isAddFormVisible, setAddFormVisible] = useState(false);
   const [isEditFormVisible, setEditFormVisible] = useState(false);
 
+  // Fetch initial data for rentals, customers, and movies
   useEffect(() => {
     fetchRentals();
     fetchCustomers();
     fetchMovies();
   }, []);
 
+  // Fetch all rentals
   const fetchRentals = () => {
     httpClient
       .get("/rentals")
@@ -35,6 +38,7 @@ const Rentals = () => {
       });
   };
 
+  // Fetch all customers
   const fetchCustomers = () => {
     httpClient
       .get("/customers")
@@ -46,6 +50,7 @@ const Rentals = () => {
       });
   };
 
+  // Fetch all movies
   const fetchMovies = () => {
     httpClient
       .get("/movies")
@@ -57,6 +62,7 @@ const Rentals = () => {
       });
   };
 
+  // Handle input changes for new rental form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewRental({
@@ -65,6 +71,7 @@ const Rentals = () => {
     });
   };
 
+  // Handle input changes for edit rental form
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditRental((prevEditRental) => ({
@@ -73,6 +80,7 @@ const Rentals = () => {
     }));
   };
 
+  // Add a new rental
   const addRental = () => {
     httpClient
       .post("/rentals", newRental)
@@ -92,6 +100,7 @@ const Rentals = () => {
       });
   };
 
+  // Update an existing rental
   const updateRental = (rentalID) => {
     httpClient
       .put(`/rentals/${rentalID}`, editRental)
@@ -105,6 +114,7 @@ const Rentals = () => {
       });
   };
 
+  // Delete a rental
   const deleteRental = (rentalID) => {
     httpClient
       .delete(`/rentals/${rentalID}`)
@@ -116,6 +126,7 @@ const Rentals = () => {
       });
   };
 
+  // Define columns for DataGrid
   const columns = [
     { field: 'rentalID', headerName: 'Rental ID', width: 100 },
     { field: 'customerID', headerName: 'Customer ID', width: 150 },
@@ -153,6 +164,10 @@ const Rentals = () => {
     },
   ];
 
+// Citation for the following function:
+// Date: June 2024
+// Original code using components from 
+// Material-UI (June 2024) Material-UI (v^5.0.0) [Library]. Retrieved from https://mui.com/
   return (
     <Container>
       <h1>Rentals</h1>
