@@ -114,6 +114,7 @@ const Genre = () => {
   return (
     <Container>
       <h1>Genres</h1>
+      <p>This page displays a list of genres and allows adding, editing, and deleting genres.</p>
       <Button
         variant="contained"
         onClick={() => setAddFormVisible(!isAddFormVisible)}

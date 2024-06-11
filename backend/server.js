@@ -437,6 +437,71 @@ app.delete("/api/mappings/:id", (req, res) => {
   });
 });
 
+// Fetch all movie people mappings
+app.get("/api/moviepeople", (req, res) => {
+  const query = "SELECT * FROM MoviePeople";
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching movie people mappings: " + err.stack);
+      res.status(500).send("Error fetching movie people mappings");
+      return;
+    }
+    res.json(results);
+  });
+});
+
+// Add a new movie person mapping
+app.post("/api/moviepeople", (req, res) => {
+  const { movieID, nameID } = req.body;
+  const query = "INSERT INTO MoviePeople (movieID, nameID) VALUES (?, ?)";
+  db.query(query, [movieID, nameID], (err, result) => {
+    if (err) {
+      console.error("Error adding movie person mapping: " + err.stack);
+      res.status(500).send("Error adding movie person mapping");
+      return;
+    }
+    res.send("Movie person mapping added successfully");
+  });
+});
+
+// Update a movie person mapping
+app.put("/api/moviepeople/:id", (req, res) => {
+  const mappingID = req.params.id;
+  const { movieID, nameID } = req.body;
+  const query =
+    "UPDATE MoviePeople SET movieID = ?, nameID = ? WHERE moviePeopleID = ?";
+  db.query(query, [movieID, nameID, mappingID], (err, result) => {
+    if (err) {
+      console.error("Error updating movie person mapping: " + err.stack);
+      res.status(500).send("Error updating movie person mapping");
+      return;
+    }
+    if (result.affectedRows === 0) {
+      res.status(404).send("Movie person mapping not found");
+      return;
+    }
+    res.send("Movie person mapping updated successfully");
+  });
+});
+
+// Delete a movie person mapping
+app.delete("/api/moviepeople/:id", (req, res) => {
+  const mappingID = req.params.id;
+  const query = "DELETE FROM MoviePeople WHERE moviePeopleID = ?";
+  db.query(query, [mappingID], (err, result) => {
+    if (err) {
+      console.error("Error deleting movie person mapping: " + err.stack);
+      res.status(500).send("Error deleting movie person mapping");
+      return;
+    }
+    if (result.affectedRows === 0) {
+      res.status(404).send("Movie person mapping not found");
+      return;
+    }
+    res.send("Movie person mapping deleted successfully");
+  });
+});
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/build", "index.html"));
 });

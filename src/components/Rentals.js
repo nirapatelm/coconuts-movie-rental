@@ -156,6 +156,7 @@ const Rentals = () => {
   return (
     <Container>
       <h1>Rentals</h1>
+      <p>This page displays a list of rentals and allows adding, editing, and deleting rentals.</p>
       <Button variant="contained" onClick={() => setAddFormVisible(!isAddFormVisible)}>
         {isAddFormVisible ? "Cancel" : "Add New Rental"}
       </Button>

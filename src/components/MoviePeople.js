@@ -12,43 +12,43 @@ import {
 } from "@mui/material";
 import httpClient from "../utils/axiosInterceptor";
 
-const MappingsPage = () => {
-  const [mappings, setMappings] = useState([]);
-  const [genres, setGenres] = useState([]);
+const MoviePeople = () => {
+  const [moviePeople, setMoviePeople] = useState([]);
+  const [people, setPeople] = useState([]);
   const [movies, setMovies] = useState([]);
-  const [newMapping, setNewMapping] = useState({
-    genreID: "",
+  const [newMoviePeople, setNewMoviePeople] = useState({
     movieID: "",
+    nameID: "",
   });
-  const [editMapping, setEditMapping] = useState(null);
+  const [editMoviePeople, setEditMoviePeople] = useState(null);
   const [isAddFormVisible, setAddFormVisible] = useState(false);
   const [isEditFormVisible, setEditFormVisible] = useState(false);
 
   useEffect(() => {
-    fetchMappings();
-    fetchGenres();
+    fetchMoviePeople();
+    fetchPeople();
     fetchMovies();
   }, []);
 
-  const fetchMappings = () => {
+  const fetchMoviePeople = () => {
     httpClient
-      .get("/mappings")
+      .get("/moviepeople")
       .then((response) => {
-        setMappings(response.data);
+        setMoviePeople(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching mappings:", error);
+        console.error("Error fetching movie people:", error);
       });
   };
 
-  const fetchGenres = () => {
+  const fetchPeople = () => {
     httpClient
-      .get("/genre")
+      .get("/people")
       .then((response) => {
-        setGenres(response.data);
+        setPeople(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching genres:", error);
+        console.error("Error fetching names:", error);
       });
   };
 
@@ -65,64 +65,65 @@ const MappingsPage = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewMapping({
-      ...newMapping,
+    console.log(people);
+    setNewMoviePeople({
+      ...newMoviePeople,
       [name]: value,
     });
   };
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-    setEditMapping((prevEditMapping) => ({
-      ...prevEditMapping,
+    setEditMoviePeople((prevEditMoviePeople) => ({
+      ...prevEditMoviePeople,
       [name]: value,
     }));
   };
 
-  const addMapping = () => {
+  const addMoviePeople = () => {
     httpClient
-      .post("/mappings", newMapping)
+      .post("/moviepeople", newMoviePeople)
       .then(() => {
-        fetchMappings();
-        setNewMapping({
-          genreID: "",
+        fetchMoviePeople();
+        setNewMoviePeople({
           movieID: "",
+          nameID: "",
         });
         setAddFormVisible(false);
       })
       .catch((error) => {
-        console.error("Error adding mapping:", error);
+        console.error("Error adding movie people:", error);
       });
   };
 
-  const updateMapping = (mappingID) => {
+  const updateMoviePeople = (moviePeopleID) => {
     httpClient
-      .put(`/mappings/${mappingID}`, editMapping)
+      .put(`/moviepeople/${moviePeopleID}`, editMoviePeople)
       .then(() => {
-        fetchMappings();
-        setEditMapping(null);
+        fetchMoviePeople();
+        setEditMoviePeople(null);
         setEditFormVisible(false);
       })
       .catch((error) => {
-        console.error("Error updating mapping:", error);
+        console.error("Error updating movie people:", error);
       });
   };
 
-  const deleteMapping = (mappingID) => {
+  const deleteMoviePeople = (moviePeopleID) => {
     httpClient
-      .delete(`/mappings/${mappingID}`)
+      .delete(`/moviepeople/${moviePeopleID}`)
       .then(() => {
-        fetchMappings();
+        fetchMoviePeople();
       })
       .catch((error) => {
-        console.error("Error deleting mapping:", error);
+        console.error("Error deleting movie people:", error);
       });
   };
 
   const columns = [
-    { field: "mappingID", headerName: "Mapping ID", width: 150 },
-    { field: "genreID", headerName: "Genre ID", width: 150 },
+    { field: "moviePeopleID", headerName: "Movie People ID", width: 150 },
     { field: "movieID", headerName: "Movie ID", width: 150 },
+    { field: "nameID", headerName: "Name ID", width: 150 },
     {
       field: "actions",
       headerName: "Actions",
@@ -133,7 +134,7 @@ const MappingsPage = () => {
             variant="contained"
             color="primary"
             onClick={() => {
-              setEditMapping(params.row);
+              setEditMoviePeople(params.row);
               setEditFormVisible(true);
               setAddFormVisible(false);
             }}
@@ -144,7 +145,7 @@ const MappingsPage = () => {
           <Button
             variant="contained"
             color="error"
-            onClick={() => deleteMapping(params.row.mappingID)}
+            onClick={() => deleteMoviePeople(params.row.moviePeopleID)}
           >
             Delete
           </Button>
@@ -155,39 +156,23 @@ const MappingsPage = () => {
 
   return (
     <Container>
-      <h1>Mappings</h1>
-      <p>This page displays a list of mappings between Movies and Genres and allows adding, editing, and deleting.</p>
+      <h1>Movie People</h1>
+      <p>This page displays a list of mappings for Movies and People and allows adding, editing, and deleting. People can be directors or actors/actresses.</p>
       <Button
         variant="contained"
         onClick={() => setAddFormVisible(!isAddFormVisible)}
       >
-        {isAddFormVisible ? "Cancel" : "Add New Mapping"}
+        {isAddFormVisible ? "Cancel" : "Add New MoviePeople"}
       </Button>
       {isAddFormVisible && (
         <Box my={2}>
-          <h2>Add New Mapping</h2>
+          <h2>Add New Movie People</h2>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>Genre</InputLabel>
-                <Select
-                  value={newMapping.genreID}
-                  onChange={handleInputChange}
-                  name="genreID"
-                >
-                  {genres.map((genre) => (
-                    <MenuItem key={genre.genreID} value={genre.genreID}>
-                      {genre.genreName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel>Movie</InputLabel>
                 <Select
-                  value={newMapping.movieID}
+                  value={newMoviePeople.movieID}
                   onChange={handleInputChange}
                   name="movieID"
                 >
@@ -199,9 +184,25 @@ const MappingsPage = () => {
                 </Select>
               </FormControl>
             </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Name</InputLabel>
+                <Select
+                  value={newMoviePeople.nameID}
+                  onChange={handleInputChange}
+                  name="nameID"
+                >
+                  {people.map((people) => (
+                    <MenuItem key={people.nameID} value={people.nameID}>
+                      {people.firstName + " " + people.lastName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
             <Grid item xs={12}>
-              <Button variant="contained" onClick={addMapping}>
-                Add Mapping
+              <Button variant="contained" onClick={addMoviePeople}>
+                Add MoviePeople
               </Button>
             </Grid>
           </Grid>
@@ -209,38 +210,22 @@ const MappingsPage = () => {
       )}
       <Box my={2} style={{ height: 600, width: "100%" }}>
         <DataGrid
-          rows={mappings}
+          rows={moviePeople}
           columns={columns}
           pageSize={10}
           rowsPerPageOptions={[10]}
-          getRowId={(row) => row.mappingID}
+          getRowId={(row) => row.moviePeopleID}
         />
       </Box>
-      {isEditFormVisible && editMapping && (
+      {isEditFormVisible && editMoviePeople && (
         <Box my={2}>
-          <h2>Edit Mapping</h2>
+          <h2>Edit MoviePeople</h2>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>Genre</InputLabel>
-                <Select
-                  value={editMapping.genreID}
-                  onChange={handleEditChange}
-                  name="genreID"
-                >
-                  {genres.map((genre) => (
-                    <MenuItem key={genre.genreID} value={genre.genreID}>
-                      {genre.genreName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel>Movie</InputLabel>
                 <Select
-                  value={editMapping.movieID}
+                  value={editMoviePeople.movieID}
                   onChange={handleEditChange}
                   name="movieID"
                 >
@@ -252,18 +237,34 @@ const MappingsPage = () => {
                 </Select>
               </FormControl>
             </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Name</InputLabel>
+                <Select
+                  value={editMoviePeople.nameID}
+                  onChange={handleEditChange}
+                  name="nameID"
+                >
+                  {people.map((people) => (
+                    <MenuItem key={people.nameID} value={people.nameID}>
+                      {people.firstName + " " + people.lastName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
             <Grid item xs={12}>
               <Button
                 variant="contained"
-                onClick={() => updateMapping(editMapping.mappingID)}
+                onClick={() => updateMoviePeople(editMoviePeople.moviePeopleID)}
               >
-                Update Mapping
+                Update MoviePeople
               </Button>
               <Button
                 variant="contained"
                 color="error"
                 onClick={() => {
-                  setEditMapping(null);
+                  setEditMoviePeople(null);
                   setEditFormVisible(false);
                 }}
                 style={{ marginLeft: 8 }}
@@ -278,4 +279,4 @@ const MappingsPage = () => {
   );
 };
 
-export default MappingsPage;
+export default MoviePeople;

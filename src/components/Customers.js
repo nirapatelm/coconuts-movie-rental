@@ -129,6 +129,7 @@ const Customers = () => {
   return (
     <Container>
       <h1>Customers</h1>
+      <p>This page displays a list of customers and allows adding, editing, and deleting customers.</p>
       <Button
         sx={{
           margin: "20px",

@@ -127,6 +127,7 @@ const Movies = () => {
   return (
     <Container>
       <h1>Movies</h1>
+      <p>This page displays a list of movies and allows adding, editing, and deleting movies.</p>
       <Button variant="contained" onClick={() => setAddFormVisible(!isAddFormVisible)}>
         {isAddFormVisible ? "Cancel" : "Add New Movie"}
       </Button>

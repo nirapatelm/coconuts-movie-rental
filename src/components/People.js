@@ -115,6 +115,7 @@ const People = () => {
   return (
     <Container>
       <h1>People</h1>
+      <p>This page displays a list of people and allows adding, editing, and deleting people. People can be directors or actors/actresses.</p>
       <Button variant="contained" onClick={() => setAddFormVisible(!isAddFormVisible)}>
         {isAddFormVisible ? "Cancel" : "Add New Person"}
       </Button>

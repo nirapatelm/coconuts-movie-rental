@@ -4,11 +4,13 @@ import { Drawer, List, ListItem, ListItemText, CssBaseline, AppBar, Toolbar, Typ
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import Mapping from "./components/MappingPage";
+import Home from "./components/Home"
 import Movies from "./components/Movies";
 import Rentals from "./components/Rentals";
 import Genres from "./components/Genre";
 import Customers from "./components/Customers";
 import People from "./components/People";
+import MoviePeople from "./components/MoviePeople";
 
 const drawerWidth = 240;
 
@@ -25,13 +27,16 @@ const App = () => {
     <div>
       <Toolbar />
       <List>
+      <ListItem button component={Link} to="/" onClick={handleDrawerToggle}>
+          <ListItemText primary="Home" />
+        </ListItem>
         <ListItem button component={Link} to="/customers" onClick={handleDrawerToggle}>
           <ListItemText primary="Customers" />
         </ListItem>
         <ListItem button component={Link} to="/movies" onClick={handleDrawerToggle}>
           <ListItemText primary="Movies" />
         </ListItem>
-        <ListItem button component={Link} to="/" onClick={handleDrawerToggle}>
+        <ListItem button component={Link} to="/rentals" onClick={handleDrawerToggle}>
           <ListItemText primary="Rentals" />
         </ListItem>
         <ListItem button component={Link} to="/people" onClick={handleDrawerToggle}>
@@ -42,6 +47,9 @@ const App = () => {
         </ListItem>
         <ListItem button component={Link} to="/mapping" onClick={handleDrawerToggle}>
           <ListItemText primary="Mapping" />
+        </ListItem>
+        <ListItem button component={Link} to="/moviepeople" onClick={handleDrawerToggle}>
+          <ListItemText primary="Movie People" />
         </ListItem>
       </List>
     </div>
@@ -65,7 +73,7 @@ const App = () => {
               </IconButton>
             )}
             <Typography variant="h6" noWrap>
-              Movie Rentals
+              Coconuts Movie Rental
             </Typography>
           </Toolbar>
         </AppBar>
@@ -92,12 +100,14 @@ const App = () => {
         <main style={{ flexGrow: 1, padding: "20px", marginLeft: 'auto' }}>
           <Toolbar />
           <Routes>
-            <Route path="/" element={<Rentals />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/rentals" element={<Rentals />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/movies" element={<Movies />} />
             <Route path="/people" element={<People />} />
             <Route path="/genres" element={<Genres />} />
             <Route path="/mapping" element={<Mapping />} />
+            <Route path="/moviepeople" element={<MoviePeople />} />
           </Routes>
         </main>
       </div>
